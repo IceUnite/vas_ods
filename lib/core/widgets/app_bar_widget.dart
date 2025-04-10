@@ -126,6 +126,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
             width: 20,
           ),
         ],
+
       ),
     );
   }
