@@ -50,7 +50,6 @@ class _AuthPageState extends State<AuthPage> with SingleTickerProviderStateMixin
 
     return Consumer<ThemeNotifier>(
       builder: (context, themeNotifier, child) {
-        final isDarkTheme = themeNotifier.isDarkTheme;
 
         return BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
@@ -95,8 +94,7 @@ class _AuthPageState extends State<AuthPage> with SingleTickerProviderStateMixin
                                         width: logoSize,
                                         height: logoSize,
                                         child: SvgPicture.asset(
-                                          ImageAssets.logo,
-                                          color: AppColors.orange200,
+                                          VectorAssets.logoWhite,
                                         ),
                                       ),
                                     );

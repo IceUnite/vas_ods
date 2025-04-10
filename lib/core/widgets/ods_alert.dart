@@ -485,7 +485,7 @@ class ApeironSpaceDialog extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 foregroundColor: AppColors.white,
-                backgroundColor: AppColors.orange.withOpacity(0.8),
+                backgroundColor: AppColors.redLight.withOpacity(0.8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),

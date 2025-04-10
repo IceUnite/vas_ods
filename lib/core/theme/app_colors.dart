@@ -1,39 +1,48 @@
 import 'package:flutter/painting.dart';
 
 abstract class AppColors {
+
+
+
   static const Color white = Color(0xFFFFFFFF);
-  static const Color white200 = Color(0xFFD7D7D7);
   static const Color white100 = Color(0xFFD6D6D6);
-  static const Color white300 = Color(0xFFEAEAEA);
+  static const Color white200 = Color(0xFFD4D4D4);
+  static const Color white300 = Color(0xFF9C9C9C);
+  static const Color white400 = Color(0xFF535353);
+  static const Color white500 = Color(0xFF404040);
+
+  // static const Color white200 = Color(0xFFD7D7D7);
+  // static const Color white500 = Color(0xFF9C9C9C);
   static const Color white50 = Color(0xFFF4F4F4);
 
   static const Color appBackground = Color(0xFF262626);
 
   static const Color black50 = Color(0xFF262626);
   static const Color black100 = Color(0xFF1D1E1E);
-  static const Color black200 = Color(0xFFB1B1BC);
   static const Color black = Color(0xFF141414);
+
   static const Color red = Color(0xFFEB5757);
-  static const Color red200 = Color(0xFFD31919);
+  static const Color redLight = Color(0xFFF37B7B);
 
-  static const Color orange = Color(0xFFF37B7B);
-
-  static const Color green = Color(0xFF1C545B);
-  static const Color green100 = Color(0xFF5B97B7);
+  static const Color green = Color(0xFF25B97B);
+  static const Color greenLight = Color(0xFFAAE9C4);
+  static const Color green100 = Color(0xFF25B97B);
   static const Color green200 = Color(0xFFA1F378);
   static const Color green300 = Color(0xFF85D375);
 
-  static const Color light = Color(0xFFA8BFC2);
-  static const gray = _Gray();
 
+  static const Color orange = Color(0xFFFFAF50);
   static const Color orange50 = Color(0xFFFFCC00);
   static const Color orange100 = Color(0xFFFFAF50);
   static const Color orange200 = Color(0xFFFFD161);
 
-  static const Color purple100 = Color(0xFFE6D7FF);
-  static const Color red100 = Color(0xFF37B7B7);
-  static const Color blue100 = Color(0xFF49B2D3);
-  static const Color blue200 = Color(0xFF5F81F5);
+  static const Color purple = Color(0xFFE6D7FF);
+
+  // static const Color red100 = Color(0xFF37B7B7);
+  static const Color blue = Color(0xFF49B2D3);
+  static const Color blueLight = Color(0xFFB1DBFC);
+
+  static const gray = _Gray();
 
   static const gradientOrangeBackground = LinearGradient(
     colors: [

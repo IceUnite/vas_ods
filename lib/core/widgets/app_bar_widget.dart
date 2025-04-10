@@ -9,8 +9,10 @@ import 'package:vas_ods/core/resources/assets/resources.dart' show VectorAssets;
 import 'package:vas_ods/core/theme/app_colors.dart' show AppColors;
 import 'package:vas_ods/core/theme/typography.dart' show AppTypography;
 import 'package:vas_ods/core/widgets/data_selector_widget.dart';
+import 'package:vas_ods/core/widgets/ods_alert.dart';
 import 'package:vas_ods/core/widgets/vertical_divider_widget.dart' show VerticalDividerWidget;
 import 'package:vas_ods/feature/app/routing/route_path.dart' show AppRoute;
+import 'package:vas_ods/feature/auth_page/presentation/bloc/auth_bloc.dart';
 import 'package:vas_ods/feature/main_page/presentation/bloc/profile_bloc.dart' show ProfileBloc;
 import 'package:vas_ods/main.dart';
 
@@ -120,7 +122,15 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
           ),
           const VerticalDividerWidget(),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                ApeironSpaceDialog.showActionDialog(context,
+                    title: "Вы уверены что хотите выйти из своего аккаунта?", onPressedConfirm: () {
+
+                    }, confirmText: "Отмена", closeText: 'Выйти', onPressedClosed: () { context.read<AuthBloc>().add(
+                      ExiteEvent(),
+                    );
+                    context.goNamed(AppRoute.authScreenPath); });
+              },
               icon: SvgPicture.asset(VectorAssets.exite, width: 30, height: 30, color: AppColors.white)),
           const SizedBox(
             width: 20,
