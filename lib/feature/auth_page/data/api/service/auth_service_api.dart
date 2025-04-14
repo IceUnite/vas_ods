@@ -34,13 +34,13 @@ class AuthApiDioService implements AuthApi {
   }
 
   @override
-  Future<void> checkToken({
+  Future<void> checkTokenOper({
     required String userId,
     required String token,
   }) async {
     try {
       final response = await dio.post(
-        '/users/check_token',
+        '/users/check_token_oper',
         queryParameters: {
           "id": userId,
           "token": token,

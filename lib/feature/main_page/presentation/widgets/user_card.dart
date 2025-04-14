@@ -91,6 +91,7 @@ class UserCard extends StatelessWidget {
             ),
           ),
 
+          Container(height: 1, color: Color(0xFFE0E0E0)),
           // Date
           Padding(
             padding: const EdgeInsets.only(left: 10.0),
@@ -116,39 +117,45 @@ class UserCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: AppButtonStyle.primaryStyleOrange.copyWith(
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 3),
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: AppButtonStyle.primaryStyleOrange.copyWith(
+                      shape: WidgetStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                       ),
                     ),
-                  ),
-                  child: Text(
-                    'Выполнить',
-                    style: AppTypography.font20Raleway.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
+                    child: Text(
+                      'Выполнить',
+                      style: AppTypography.font16Raleway.copyWith(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: AppButtonStyle.primaryStyleOrange.copyWith(
-                    backgroundColor: const WidgetStatePropertyAll(AppColors.redLight),
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 3),
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: AppButtonStyle.primaryStyleOrange.copyWith(
+                      backgroundColor: const WidgetStatePropertyAll(AppColors.redLight),
+                      shape: WidgetStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                       ),
                     ),
-                  ),
-                  child: Text(
-                    'Отметить ошибку',
-                    style: AppTypography.font20Raleway.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
+                    child: Text(
+                      'Отметить ошибку',
+                      style: AppTypography.font16Raleway.copyWith(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -166,7 +173,8 @@ class UserCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       decoration: const BoxDecoration(
         border: Border(
-          top: BorderSide(color: Color(0xFFE0E0E0)),
+          // top: BorderSide(color: Color(0xFFE0E0E0)),
+          bottom: BorderSide(color: Color(0xFFE0E0E0)),
         ),
       ),
       child: Row(
@@ -183,26 +191,4 @@ class UserCard extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget infoTile(String icon, String text) {
-  return Container(
-    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-    decoration: const BoxDecoration(
-      border: Border(
-        top: BorderSide(color: Color(0xFFE0E0E0)),
-      ),
-    ),
-    child: Row(
-      children: [
-        SvgPicture.asset(icon),
-        const SizedBox(width: 12),
-        Expanded(
-            child: Text(
-          text,
-          style: AppTypography.font16Regular.copyWith(color: AppColors.black),
-        )),
-      ],
-    ),
-  );
 }

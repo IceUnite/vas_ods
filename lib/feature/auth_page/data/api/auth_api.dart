@@ -7,7 +7,7 @@ abstract class AuthApi {
     required String password,
   });
 
-  Future<void> checkToken({
+  Future<void> checkTokenOper({
     required String userId,
     required String token,
   });

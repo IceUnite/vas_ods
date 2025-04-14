@@ -13,7 +13,6 @@ import 'package:vas_ods/core/widgets/ods_alert.dart';
 import 'package:vas_ods/core/widgets/vertical_divider_widget.dart' show VerticalDividerWidget;
 import 'package:vas_ods/feature/app/routing/route_path.dart' show AppRoute;
 import 'package:vas_ods/feature/auth_page/presentation/bloc/auth_bloc.dart';
-import 'package:vas_ods/feature/main_page/presentation/bloc/profile_bloc.dart' show ProfileBloc;
 import 'package:vas_ods/main.dart';
 
 class BreakfastAppBarWidget extends StatefulWidget {

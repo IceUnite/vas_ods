@@ -1,8 +1,8 @@
-part of 'profile_bloc.dart';
+part of 'order_bloc.dart';
 
 @immutable
-class ProfileState extends Equatable {
-  ProfileState({
+class OrderState extends Equatable {
+  OrderState({
     this.cellResponse,
   });
 
@@ -13,18 +13,18 @@ class ProfileState extends Equatable {
         cellResponse,
       ];
 
-  ProfileState copyWith({
+  OrderState copyWith({
     int? cellResponse,
 
   }) {
-    return ProfileState(
+    return OrderState(
       cellResponse: cellResponse ?? this.cellResponse,
     );
   }
 }
 
-final class ProfileInitial extends ProfileState {
-  ProfileInitial()
+final class OrderInitial extends OrderState {
+  OrderInitial()
       : super(
           cellResponse: null,
         );

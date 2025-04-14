@@ -15,7 +15,7 @@ abstract class AuthRepository {
   Future<void> logout();
 
   // Новый метод для проверки токена
-  Future<void> checkToken({
+  Future<void> checkTokenOper({
     required String userId,
     required String token,
   });

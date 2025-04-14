@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:vas_ods/core/theme/app_colors.dart' show AppColors;
 import 'package:vas_ods/core/theme/typography.dart' show AppTypography;
-import 'package:vas_ods/feature/main_page/presentation/bloc/profile_bloc.dart';
+import 'package:vas_ods/feature/main_page/presentation/bloc/order_bloc.dart';
 
 class DataSelectorWidget extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _MyDateWidgetState extends State<DataSelectorWidget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        BlocBuilder<ProfileBloc, ProfileState>(
+        BlocBuilder<OrderBloc, OrderState>(
           builder: (context, state) {
             return ConstrainedBox(
               constraints: BoxConstraints(

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vas_ods/core/theme/app_colors.dart';
 import 'package:vas_ods/core/widgets/app_bar_widget.dart';
 import 'package:vas_ods/feature/app/routing/route_path.dart' show AppRoute;
 import 'package:vas_ods/feature/main_page/presentation/widgets/category_column.dart';
 import 'package:vas_ods/feature/main_page/presentation/widgets/user_card.dart';
+
+import '../bloc/order_bloc.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -14,6 +17,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: '2025-02-12'));
+  }
   @override
   Widget build(BuildContext context) {
     final categories = [

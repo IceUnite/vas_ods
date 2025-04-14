@@ -41,7 +41,7 @@ class AuthUseCase {
     required String token,
   }) async {
     try {
-      await authRepository.checkToken(userId: userId, token: token);
+      await authRepository.checkTokenOper(userId: userId, token: token);
     } on DioException catch (e) {
       Exception exception = ServerException(e.message.toString());
       Failure failure = ErrorHandler.handleException(exception);
