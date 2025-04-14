@@ -27,7 +27,7 @@ class OrderApiDioService implements OrderApi {
         },
       );
       if (response.statusCode == 204 || response.statusCode == 200 ) {
-       return response.data;
+       return OrderServiceModel.fromJson(response.data);
       } else {
         throw Exception('Ошибка проверки токена');
       }

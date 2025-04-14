@@ -33,14 +33,16 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   @override
   void initState() {
     super.initState();
-    _formattedTime = _formatDateTime(DateTime.now().toUtc());
+    _formattedTime = _formatDateTime(DateTime.now());
     print('_formattedTime $_formattedTime');
-    _timer = Timer.periodic(const Duration(minutes: 1), (Timer t) {
-      if (_isChecked == true) {
-        // _loadDeliverySlots();
-        // _loadBreakfastOrders();
-        // _loadBreakfastOrdersSummary();
-      }
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      _formattedTime = _formatDateTime(DateTime.now());
+      print('_formattedTime $_formattedTime');
+      // if (_isChecked == true) {
+      //   _loadDeliverySlots();
+      //   _loadBreakfastOrders();
+      //   _loadBreakfastOrdersSummary();
+      // }
     });
     // _timerTime = Timer.periodic(const Duration(seconds: 1), (Timer t) => _updateTime());
     // _timerUpTime = Timer.periodic(const Duration(seconds: 1), (Timer t) => addOneMinute(_selectedTime));
