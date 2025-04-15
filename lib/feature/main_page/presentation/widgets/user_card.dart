@@ -5,6 +5,7 @@ import 'package:vas_ods/core/theme/button_style.dart';
 import 'package:vas_ods/core/theme/typography.dart';
 import 'package:vas_ods/feature/main_page/presentation/cubit/order_cubit.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/ods_alert.dart';
 
 class UserCard extends StatelessWidget {
   final int? userId;
@@ -111,7 +112,18 @@ class UserCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        ApeironSpaceDialog.showActionDialog(
+                          context,
+                          title: "Отметить документ выполненным?",
+                          onPressedConfirm: () {},
+                          confirmText: "Да",
+                          closeText: 'Нет',
+                          onPressedClosed: () {
+
+                          },
+                        );
+                      },
                       style: AppButtonStyle.primaryStyleOrange.copyWith(
                         minimumSize: WidgetStateProperty.all(const Size.fromHeight(40)),
                         shape: WidgetStateProperty.all(
@@ -131,7 +143,30 @@ class UserCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        final TextEditingController errorController = TextEditingController();
+
+                        ApeironSpaceDialog.showActionDialog(
+                          context,
+                          title: "Отметить ошибку в документе?",
+                          confirmText: "Нет",
+                          closeText: 'Да',
+                          onPressedConfirm: () {
+                            // Можно обработать ввод текста здесь
+                            final userInput = errorController.text;
+                            debugPrint("User input: $userInput");
+
+                            // Закрытие диалога — уже происходит в onConfirmTap внутри диалога
+                          },
+                          onPressedClosed: () {
+                            // При закрытии можно также использовать errorController.text
+                            final userInput = errorController.text;
+                            debugPrint("Closed with input: $userInput");
+                          },
+                          showTextField: true,
+                          textFieldController: errorController,
+                        );
+                      },
                       style: AppButtonStyle.primaryStyleOrange.copyWith(
                         minimumSize: WidgetStateProperty.all(const Size.fromHeight(40)),
                         backgroundColor: const WidgetStatePropertyAll(AppColors.redLight),
@@ -147,6 +182,7 @@ class UserCard extends StatelessWidget {
                         ),
                       ),
                     ),
+
                   ),
                 ] else ...[
                   Padding(

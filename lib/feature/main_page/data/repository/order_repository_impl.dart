@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:vas_ods/feature/main_page/data/api/service/order_service_api.dart';
-import 'package:vas_ods/feature/main_page/data/models/order_service_model.dart';
 import 'package:vas_ods/feature/main_page/domain/entities/order_service_entitie.dart';
 import 'package:vas_ods/feature/main_page/domain/repository/order_repository.dart';
 
@@ -33,5 +32,25 @@ class OrderRepositoryImpl extends OrderRepository {
       throw Exception('Ошибка при получении заявок по дате: $e');
     }
   }
-}
 
+  @override
+  Future<void> updateApplication({
+    required int userId,
+    required String token,
+    required int applicationId,
+    required String status,
+    String? description,
+  }) async {
+    try {
+      await orderServiceApi.updateApplication(
+        userId: userId,
+        token: token,
+        applicationId: applicationId,
+        status: status,
+        description: description,
+      );
+    } catch (e) {
+      throw Exception('Ошибка при обновлении заявки: $e');
+    }
+  }
+}

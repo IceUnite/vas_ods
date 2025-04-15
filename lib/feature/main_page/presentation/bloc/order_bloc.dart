@@ -12,7 +12,6 @@ import '../cubit/order_cubit.dart';
 part 'order_event.dart';
 
 part 'order_state.dart';
-
 @lazySingleton
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   final OrderUseCase orderUseCase;
@@ -20,11 +19,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   OrderBloc({required this.orderUseCase, required this.orderCubit}) : super(OrderInitial()) {
     on<GetApplicationsByDateEvent>(_onGetApplicationsByDateEvent);
+    on<ChangeApplicationStatusEvent>(_onChangeApplicationStatusEvent); // ✅ Добавлено
   }
 
   SharedPrefsRawProvider sharedPrefsRawProvider = SharedPrefsRawProvider(prefs);
-
-  // final ProfileUseCase luggageUseCase;
 
   Future<void> _onGetApplicationsByDateEvent(GetApplicationsByDateEvent event, Emitter<OrderState> emit) async {
     final userId = sharedPrefsRawProvider.getInt(SharedKeyWords.userId);
@@ -33,9 +31,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final data = await orderUseCase.getApplicationsByDate(
         userId: userId?.toInt() ?? 0,
         token: token ?? '',
-        date: '2025-02-12',
-
-        ///TODO изменить дату на дату из ивента
+        date: event.date, // ✅ Используем дату из события
       );
       if (data != null) {
         orderCubit.groupByDocumentId(data.data);
@@ -45,6 +41,25 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     }
     catch (e) {
       rethrow;
+    }
+  }
+
+  /// Обработка обновления статуса заявки
+  Future<void> _onChangeApplicationStatusEvent(ChangeApplicationStatusEvent event, Emitter<OrderState> emit) async {
+    try {
+      await orderUseCase.updateApplication(
+        userId: event.userId,
+        token: event.token,
+        applicationId: event.applicationId,
+        status: event.status,
+        description: event.description,
+      );
+
+      // Можно сюда же кинуть повторный fetch заявок или отдельный emit — зависит от логики UI
+      // emit(OrderStatusChangedSuccessfully()); // если нужно отдельное состояние
+    } catch (e) {
+      debugPrint('Ошибка при обновлении статуса: $e');
+      // emit(OrderStatusChangeFailed()); // если нужно отдельное состояние для ошибки
     }
   }
 }

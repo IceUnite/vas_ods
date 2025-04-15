@@ -21,105 +21,11 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: '2025-02-12'));
+    // context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: '2025-02-12'));
   }
 
   @override
   Widget build(BuildContext context) {
-    // final categories = [
-    //   {
-    //     'title': 'Справка о прохождении службы',
-    //     'cards': List.generate(
-    //         5,
-    //         (_) => const UserCard(
-    //               userId: null,
-    //               userName: 'Артем',
-    //               orderDate: '14/12/2000',
-    //               phoneNumber: '8 964 505 01 91',
-    //               warningMessage: ' ЗАВТРА НАДА!',
-    //               documentId: 11,
-    //             )),
-    //   },
-    //   {
-    //     'title': 'Выписка из послужного списка',
-    //     'cards': List.generate(
-    //         5,
-    //         (_) => const UserCard(
-    //               userId: null,
-    //               userName: 'Артем',
-    //               orderDate: '14/12/2000',
-    //               phoneNumber: '8 964 505 01 91',
-    //               warningMessage: ' ЗАВТРА НАДА!',
-    //               documentId: 11,
-    //             )),
-    //   },
-    //   {
-    //     'title': 'Справка об обучении в академии',
-    //     'cards': List.generate(
-    //         1,
-    //         (_) => const UserCard(
-    //               userId: null,
-    //               userName: 'Артем',
-    //               orderDate: '14/12/2000',
-    //               phoneNumber: '8 964 505 01 91',
-    //               warningMessage: ' ЗАВТРА НАДА!',
-    //               documentId: 11,
-    //             )),
-    //   },
-    //   {
-    //     'title': 'Справка о принадлежности к семье военнослужащего',
-    //     'cards': List.generate(
-    //         1,
-    //         (_) => const UserCard(
-    //               userId: null,
-    //               userName: 'Артем',
-    //               orderDate: '14/12/2000',
-    //               phoneNumber: '8 964 505 01 91',
-    //               warningMessage: ' ЗАВТРА НАДА!',
-    //               documentId: 11,
-    //             )),
-    //   },
-    //   {
-    //     'title': 'Справка о принадлежности к семье военнослужащего',
-    //     'cards': List.generate(
-    //         5,
-    //         (_) => const UserCard(
-    //               userId: null,
-    //               userName: 'Артем',
-    //               orderDate: '14/12/2000',
-    //               phoneNumber: '8 964 505 01 91',
-    //               warningMessage: ' ЗАВТРА НАДА!',
-    //               documentId: 11,
-    //             )),
-    //   },
-    //   {
-    //     'title': 'Справка о принадлежности к семье военнослужащего',
-    //     'cards': List.generate(
-    //         2,
-    //         (_) => const UserCard(
-    //               userId: null,
-    //               userName: 'Артем',
-    //               orderDate: '14/12/2000',
-    //               phoneNumber: '8 964 505 01 91',
-    //               warningMessage: ' ЗАВТРА НАДА!',
-    //               documentId: 11,
-    //             )),
-    //   },
-    //   {
-    //     'title': 'Справка о принадлежности к семье военнослужащего',
-    //     'cards': List.generate(
-    //         7,
-    //         (_) => const UserCard(
-    //               userId: null,
-    //               userName: '',
-    //               orderDate: '',
-    //               phoneNumber: '',
-    //               warningMessage: '',
-    //               documentId: null,
-    //             )),
-    //   },
-    // ];
-
     return Scaffold(
       backgroundColor: AppColors.black50,
       body: Column(
