@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Разрешение только для HTTPS, никаких изменений не нужно -->
+</network-security-config>

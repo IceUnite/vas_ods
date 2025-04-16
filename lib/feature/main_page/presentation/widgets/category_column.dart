@@ -16,7 +16,7 @@ class CategoryColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 400,
+      width: 300,
       margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         color: AppColors.black50,
@@ -34,11 +34,13 @@ class CategoryColumn extends StatelessWidget {
               child: Text(
                 title,
                 textAlign: TextAlign.start,
-                maxLines: 6,
-                style: AppTypography.font20Raleway.copyWith(
+                maxLines: 3,
+                overflow: TextOverflow.fade,
+                style: AppTypography.font16Raleway.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.white300,
                 ),
+                softWrap: true,
               ),
             ),
           ),

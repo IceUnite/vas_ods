@@ -2,13 +2,20 @@
 import 'package:vas_ods/feature/auth_page/domain/entities/refresh_token_entitie.dart' show TokenEntity;
 
 import '../../data/models/order_service_model.dart';
+import '../entities/order_service_entitie.dart';
 
 abstract class OrderRepository {
-  Future<OrderServiceModel?> getApplicationsByDate({
+  Future<OrderServiceEntity?> getApplicationsByDate({
     required int userId,
     required String token,
     required String date,
   });
 
-
+  Future<void> updateApplication({
+    required int userId,
+    required String token,
+    required int applicationId,
+    required String status,
+    String? description,
+  });
 }

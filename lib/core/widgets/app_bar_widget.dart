@@ -13,7 +13,7 @@ import 'package:vas_ods/core/widgets/ods_alert.dart';
 import 'package:vas_ods/core/widgets/vertical_divider_widget.dart' show VerticalDividerWidget;
 import 'package:vas_ods/feature/app/routing/route_path.dart' show AppRoute;
 import 'package:vas_ods/feature/auth_page/presentation/bloc/auth_bloc.dart';
-import 'package:vas_ods/main.dart';
+import 'package:vas_ods/feature/main_page/presentation/bloc/order_bloc.dart';
 
 class BreakfastAppBarWidget extends StatefulWidget {
   const BreakfastAppBarWidget({Key? key, required this.selectTime}) : super(key: key);
@@ -27,23 +27,20 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   late Timer _timer;
   late Timer _timerTime;
   late String _formattedTime;
-  TimeOfDay? _selectedTime;
-  bool _isChecked = false;
 
   @override
   void initState() {
     super.initState();
-    _formattedTime = _formatDateTime(DateTime.now().toUtc());
-    print('_formattedTime $_formattedTime');
-    _timer = Timer.periodic(const Duration(minutes: 1), (Timer t) {
-      if (_isChecked == true) {
-        // _loadDeliverySlots();
-        // _loadBreakfastOrders();
-        // _loadBreakfastOrdersSummary();
-      }
+    _formattedTime = _formatDateTime(DateTime.now());
+    var state = context.read<OrderBloc>().state;
+    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
+    _timer = Timer.periodic(const Duration(seconds: 60), (Timer t) {
+      setState(() {
+        state = context.read<OrderBloc>().state;
+        context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
+        _formattedTime = _formatDateTime(DateTime.now());
+      });
     });
-    // _timerTime = Timer.periodic(const Duration(seconds: 1), (Timer t) => _updateTime());
-    // _timerUpTime = Timer.periodic(const Duration(seconds: 1), (Timer t) => addOneMinute(_selectedTime));
   }
 
   String _formatDateTime(DateTime dateTime) {
@@ -61,185 +58,81 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   void dispose() {
     _timer.cancel();
     _timerTime.cancel();
-    // _timerUpTime.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 85,
-      color: AppColors.black100,
-      width: double.infinity,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(
-            width: 20,
-          ),
-          IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset(
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return BlocBuilder<OrderBloc, OrderState>(
+      builder: (context, state) {
+        return Container(
+          height: 85,
+          color: AppColors.black100,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              SvgPicture.asset(
                 VectorAssets.logoWhite,
                 width: 50,
                 height: 50,
-              )),
-          SizedBox(
-            width: 20,
-          ),
-          Text(
-            'Военная академия связи имени маршала Советского союза С.М. Буденого',
-            style: TextStyle(fontSize: 18, color: AppColors.orange100),
-          ),
-          const Spacer(),
-          // Checkbox(
-          //   value: _isChecked,
-          //   onChanged: (newValue) {
-          //     setState(() {
-          //       _isChecked = newValue!;
-          //     });
-          //   },
-          // ),
-          DataSelectorWidget(),
-          SizedBox(
-            width: 20,
-          ),
-          InkWell(
-            onTap: () {
-              // _selectTime(
-              //   context: context,
-              // );
-            },
-            child: SizedBox(
-              width: 100,
-              child: Text(
-                _formattedTime,
-                style: AppTypography.font32Regular.copyWith(color: AppColors.orange100),
               ),
-            ),
+              // const SizedBox(width: 12),
+              // if (screenWidth > 800) // Показывать длинный текст только на больших экранах
+              //   const Expanded(
+              //     flex: 2,
+              //     child: FittedBox(
+              //       alignment: Alignment.centerLeft,
+              //       fit: BoxFit.scaleDown,
+              //       child: Text(
+              //         maxLines: 2,
+              //         'Военная академия связи имени маршала Советского Союза С.М. Буденного',
+              //         style: TextStyle(
+              //           fontSize: 18,
+              //           color: AppColors.orange100,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              const Spacer(),
+              DataSelectorWidget(),
+              const SizedBox(width: 12),
+              InkWell(
+                onTap: () {
+                  // handle time select
+                },
+                child: Text(
+                  _formattedTime,
+                  style: AppTypography.font32Regular.copyWith(color: AppColors.orange100),
+                ),
+              ),
+              const VerticalDividerWidget(),
+              IconButton(
+                onPressed: () {
+                  ApeironSpaceDialog.showActionDialog(
+                    context,
+                    title: "Вы уверены что хотите выйти из своего аккаунта?",
+                    onPressedConfirm: () {},
+                    confirmText: "Отмена",
+                    closeText: 'Выйти',
+                    onPressedClosed: () {
+                      context.read<AuthBloc>().add(ExiteEvent());
+                      context.goNamed(AppRoute.authScreenPath);
+                    },
+                  );
+                },
+                icon: SvgPicture.asset(
+                  VectorAssets.exite,
+                  width: 30,
+                  height: 30,
+                  color: AppColors.white,
+                ),
+              ),
+            ],
           ),
-          const VerticalDividerWidget(),
-          IconButton(
-              onPressed: () {
-                ApeironSpaceDialog.showActionDialog(context,
-                    title: "Вы уверены что хотите выйти из своего аккаунта?", onPressedConfirm: () {
-
-                    }, confirmText: "Отмена", closeText: 'Выйти', onPressedClosed: () { context.read<AuthBloc>().add(
-                      ExiteEvent(),
-                    );
-                    context.goNamed(AppRoute.authScreenPath); });
-              },
-              icon: SvgPicture.asset(VectorAssets.exite, width: 30, height: 30, color: AppColors.white)),
-          const SizedBox(
-            width: 20,
-          ),
-        ],
-
-      ),
+        );
+      },
     );
   }
-
-// void _loadHotels() {
-//   context.read<ProfileBloc>().add(const LoadHotelsEvent(hotelIds: [1]));
-// }
-//
-// void _loadBreakfastOrders() {
-//   final currentState = context.read<BreakfastBloc>().state;
-//   final DateTime useDate = currentState.selectDate ?? DateTime.now();
-//
-//   final DateTime currentDateWithoutTime = DateTime(useDate.year, useDate.month, useDate.day);
-//   final DateTime currentDateWithoutTimeNext =
-//   DateTime(useDate.year, useDate.month, useDate.day).add(const Duration(days: 1));
-//
-//   context.read<BreakfastBloc>().add(LoadBreakfastOrdersEvent(
-//       from: currentDateWithoutTime,
-//       to: currentDateWithoutTimeNext,
-//       hotelIds: [1],
-//       statuses: [
-//         'Paid',
-//         'Completed',
-//         'OnDelivery',
-//         'Accepted',
-//         'Closed',
-//       ],
-//       page: 0,
-//       pageSize: 10,
-//       isInitial: false));
-// }
-//
-// void _updateTime() {
-//   setState(() {
-//     _formattedTime = formatTimeOfDay(widget.selectTime);
-//     print('widget.selectTime ${widget.selectTime}');
-//   });
-// }
-//
-// TimeOfDay _convertToUtc(TimeOfDay timeOfDay) {
-//   final now = DateTime.now();
-//   final dateTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
-//   final utcDateTime = dateTime.toUtc();
-//   return TimeOfDay(hour: utcDateTime.hour, minute: utcDateTime.minute);
-// }
-//
-// Future<void> _selectTime({required BuildContext context}) async {
-//   print('_selectedTime ${_selectedTime}');
-//   print('_convertToUtc(TimeOfDay.now() ${_convertToUtc(TimeOfDay.now())}');
-//   final TimeOfDay? picked = await showTimePicker(
-//     context: context,
-//     initialTime: _selectedTime ?? _convertToUtc(TimeOfDay.now()),
-//   );
-//   if (picked != null && picked != _selectedTime) {
-//     _selectedTime = picked;
-//     context.read<BreakfastBloc>().add(SetTimeEvent(selectTime: _selectedTime));
-//     _updateTime();
-//     setState(() {
-//       _loadDeliverySlots();
-//       _loadBreakfastOrders();
-//       _loadBreakfastOrdersSummary();
-//     });
-//   }
-// }
-//
-// void addOneMinute(TimeOfDay? time) {
-//   int newHour = time!.hour;
-//   int newMinute = time.minute + 1;
-//
-//   if (newMinute == 60) {
-//     newMinute = 0;
-//     newHour = (newHour + 1) % 24;
-//   }
-//   TimeOfDay newTime = TimeOfDay(hour: newHour, minute: newMinute);
-//   context.read<BreakfastBloc>().add(SetTimeEvent(selectTime: newTime));
-// }
-//
-// void _loadBreakfastOrdersSummary() {
-//   final DateTime? from = context.read<BreakfastBloc>().state.selectDate;
-//   final DateTime? to = context.read<BreakfastBloc>().state.selectDate?.add(const Duration(days: 1));
-//   DateTime fromNoTime = sendDateWithoutTime(from!);
-//   DateTime toNoTime = sendDateWithoutTime(to!);
-//   final List<int> hotelIds = [1];
-//
-//   context.read<BreakfastBloc>().add(LoadBreakfastOrdersSummaryEvent(
-//     from: fromNoTime,
-//     to: toNoTime,
-//     hotelIds: hotelIds,
-//   ));
-// }
-//
-// DateTime sendDateWithoutTime(DateTime dateTime) {
-//   return DateTime(dateTime.year, dateTime.month, dateTime.day);
-// }
-//
-// void _loadDeliverySlots() {
-//   context.read<BreakfastBloc>().add(LoadDeliverySlotDTOEvent(
-//     hotelId: 1,
-//     date: context.read<BreakfastBloc>().state.selectDate,
-//   ));
-// }
-//
-// TimeOfDay getTimeOfDayFromUtc(DateTime dateTimeUtc) {
-//   final utcTime = dateTimeUtc.toUtc();
-//   return TimeOfDay(hour: utcTime.hour, minute: utcTime.minute);
-// }
 }

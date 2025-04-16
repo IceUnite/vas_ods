@@ -37,4 +37,27 @@ class OrderUseCase {
       throw failure;
     }
   }
+
+  /// Обновление заявки
+  Future<void> updateApplication({
+    required int userId,
+    required String token,
+    required int applicationId,
+    required String status,
+    String? description,
+  }) async {
+    try {
+      await orderRepository.updateApplication(
+        userId: userId,
+        token: token,
+        applicationId: applicationId,
+        status: status,
+        description: description,
+      );
+    } on DioException catch (e) {
+      final exception = ServerException(e.message.toString());
+      final failure = ErrorHandler.handleException(exception);
+      throw failure;
+    }
+  }
 }

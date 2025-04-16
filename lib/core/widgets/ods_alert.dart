@@ -6,7 +6,7 @@ import 'package:vas_ods/core/theme/typography.dart' show AppTypography;
 
 
 class ApeironSpaceDialog extends StatelessWidget {
-  const ApeironSpaceDialog({super.key, 
+  const ApeironSpaceDialog({super.key,
     this.title,
     this.message,
     this.confirmText,
@@ -14,6 +14,8 @@ class ApeironSpaceDialog extends StatelessWidget {
     this.closeText,
     this.content,
     this.onCloseTap,
+    this.showTextField = false,
+    this.textFieldController,
   });
 
   final String? title;
@@ -24,6 +26,8 @@ class ApeironSpaceDialog extends StatelessWidget {
   final VoidCallback? onCloseTap;
   final Widget? content;
 
+  final bool showTextField;
+  final TextEditingController? textFieldController;
   static final Queue<DialogQueueData> _queue = Queue<DialogQueueData>();
   static void showUnknownErrorDialog(BuildContext context) {
     showApiErrorDialog(
@@ -142,16 +146,18 @@ class ApeironSpaceDialog extends StatelessWidget {
   }
 
   static void showActionDialog(
-    BuildContext context, {
-    required String title,
-    required VoidCallback onPressedConfirm,
-    required VoidCallback onPressedClosed,
-    String? message,
-    String? confirmText,
-    String? closeText,
-    bool dismissible = true,
-    double? verticalMargin,
-  }) {
+      BuildContext context, {
+        required String title,
+        required VoidCallback onPressedConfirm,
+        required VoidCallback onPressedClosed,
+        String? message,
+        String? confirmText,
+        String? closeText,
+        bool dismissible = true,
+        double? verticalMargin,
+        bool showTextField = false,
+        TextEditingController? textFieldController,
+      }) {
     _handleDialogQueue(
       context: context,
       dismissible: dismissible,
@@ -168,8 +174,9 @@ class ApeironSpaceDialog extends StatelessWidget {
           onCloseTap: () {
             Navigator.of(context).pop();
             onPressedClosed.call();
-
           },
+          showTextField: showTextField,
+          textFieldController: textFieldController,
         );
       },
     );
@@ -194,51 +201,7 @@ class ApeironSpaceDialog extends StatelessWidget {
                 right: 16,
               ),
 
-              // ch_handleDialogQueue(
-              //       context: context,
-              //       dismissible: dismissible,
-              //       builder: (BuildContext sheetContext) {
-              //         return Center(
-              //           child: SingleChildScrollView(
-              //             // physics: SuperBouncingScrollPhysics(),
-              //             child: Padding(
-              //               padding: EdgeInsets.only(
-              //                 bottom: MediaQuery.of(context).viewInsets.bottom,
-              //                 left: 16,
-              //                 right: 16,
-              //               ),
-              // child: Material(
-              //   color: Colors.transparent,
-              //   borderRadius: BorderRadius.circular(12),
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(
-              //       vertical: 24,
-              //       horizontal: 26,
-              //     ),
-              //     child: SizedBox(
-              //       width: double.infinity,
-              //       child: builder(sheetContext),
-              //     ),
-              //   ),
-              // ),
-              //             ),
-              //           ),
-              //         );
-              //       },
-              //     );ild: Material(
-              //   color: Colors.transparent,
-              //   borderRadius: BorderRadius.circular(12),
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(
-              //       vertical: 24,
-              //       horizontal: 26,
-              //     ),
-              //     child: SizedBox(
-              //       width: double.infinity,
-              //       child: builder(sheetContext),
-              //     ),
-              //   ),
-              // ),
+
             ),
           ),
         );
@@ -412,104 +375,111 @@ class ApeironSpaceDialog extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context).brightness;
-    double screenWidth = MediaQuery.of(context).size.width;
+    final theme = Theme.of(context).brightness;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Center(
-      // Центрирование
-      child: Container(
-        margin: EdgeInsets.symmetric(  horizontal: screenWidth < 350 ? 20 :(screenWidth - 350) /2 ),
-        constraints: const BoxConstraints(maxHeight: 250),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: theme == Brightness.dark
-              ? AppColors.gray.shade90 // Для темной темы
-              : AppColors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 10,
-              offset: Offset(0, 5),
-            ),
-          ],
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          left: 16,
+          right: 16,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            // if (roomNumber != null)
-            Text(
-              textAlign: TextAlign.center,
-              title ?? '',
-              style: AppTypography.font20Regular.copyWith(
-                // color: AppColors.black,
-                fontWeight: FontWeight.w700,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: screenWidth < 350 ? 20 : (screenWidth - 350) / 2),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: theme == Brightness.dark ? AppColors.gray.shade90 : AppColors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                offset: Offset(0, 5),
               ),
-            ),
-            message != null
-                ? Text(
-                    message ?? '',
-                    style: AppTypography.font20Regular.copyWith(
-                      color: AppColors.black,
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              if (title != null)
+                Text(
+                  title!,
+                  textAlign: TextAlign.center,
+                  style: AppTypography.font20Regular.copyWith(fontWeight: FontWeight.w700),
+                ),
+              const SizedBox(height: 12),
+              if (message != null)
+                Text(
+                  message!,
+                  style: AppTypography.font20Regular.copyWith(color: AppColors.black),
+                  textAlign: TextAlign.center,
+                ),
+              if (showTextField) ...[
+                const SizedBox(height: 20),
+                Material(
+                  color: AppColors.gray.shade90,
+                  child: TextField(
+                    controller: textFieldController,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: 'Введите сообщение для пользователя',
+                      hintStyle: TextStyle(color: Colors.grey.shade400),
+                      filled: true,
+                      fillColor: Colors.grey.shade700 ,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                  )
-                : const SizedBox(),
-
-            const Spacer(),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: AppColors.white,
-                backgroundColor: theme == Brightness.dark
-                    ? AppColors.green300.withOpacity(0.8) // Для темной темы
-                    : AppColors.green200.withOpacity(0.8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 24),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: AppColors.white,
+                  backgroundColor: theme == Brightness.dark
+                      ? AppColors.green300.withOpacity(0.8)
+                      : AppColors.green200.withOpacity(0.8),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                ),
+                onPressed: onConfirmTap,
+                child: Text(
+                  confirmText ?? 'Подтвердить',
+                  style: AppTypography.font16Regular.copyWith(
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-              onPressed: () {
-                onConfirmTap == null ? null : onConfirmTap!();
-
-                // onCancel!();
-              },
-              child: Text(
-                confirmText ?? 'Подтвердить',
-                style: AppTypography.font16Regular.copyWith(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.w700,
+              const SizedBox(height: 12),
+              if (closeText != null)
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: AppColors.white,
+                    backgroundColor: AppColors.redLight.withOpacity(0.8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                  ),
+                  onPressed: onCloseTap,
+                  child: Text(
+                    closeText!,
+                    style: AppTypography.font16Regular.copyWith(
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: AppColors.white,
-                backgroundColor: AppColors.redLight.withOpacity(0.8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-              ),
-              onPressed: () {
-                onCloseTap == null ? null : onCloseTap!();
-              },
-              // onPressed: null,
-              child: Text(
-                closeText ?? 'Отмена',
-                style: AppTypography.font16Regular.copyWith(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-        // ],
-        // ),
       ),
     );
   }
+
 }
+
+
 
 class DialogQueueData {
   const DialogQueueData({

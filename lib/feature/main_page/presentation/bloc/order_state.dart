@@ -3,22 +3,35 @@ part of 'order_bloc.dart';
 @immutable
 class OrderState extends Equatable {
   OrderState({
-    this.cellResponse,
+    this.getApplicationsResponse,
+    this.selectedDate,
+    this.selectedDateFormatted,
+    this.applicationStatus,
   });
 
-  final int? cellResponse;
-
+  final OrderServiceEntity? getApplicationsResponse;
+  final DateTime? selectedDate;
+  final String? selectedDateFormatted;
+  final ApplicationStatus? applicationStatus;
 
   List<Object?> get props => <Object?>[
-        cellResponse,
+        getApplicationsResponse,
+        selectedDate,
+        selectedDateFormatted,
+        applicationStatus,
       ];
 
   OrderState copyWith({
-    int? cellResponse,
-
+    OrderServiceEntity? getApplicationsResponse,
+    DateTime? selectedDate,
+    String? selectedDateFormatted,
+    ApplicationStatus? applicationStatus,
   }) {
     return OrderState(
-      cellResponse: cellResponse ?? this.cellResponse,
+      getApplicationsResponse: getApplicationsResponse ?? this.getApplicationsResponse,
+      selectedDate: selectedDate ?? this.selectedDate,
+      selectedDateFormatted: selectedDateFormatted ?? this.selectedDateFormatted,
+      applicationStatus: applicationStatus ?? this.applicationStatus,
     );
   }
 }
@@ -26,7 +39,9 @@ class OrderState extends Equatable {
 final class OrderInitial extends OrderState {
   OrderInitial()
       : super(
-          cellResponse: null,
+          getApplicationsResponse: null,
+          selectedDate: DateTime.now(),
+          selectedDateFormatted: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          applicationStatus: null,
         );
 }
-
