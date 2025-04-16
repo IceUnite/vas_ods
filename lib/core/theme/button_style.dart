@@ -5,7 +5,7 @@ class AppButtonStyle {
   const AppButtonStyle._();
 
   static final primaryStyleOrange = ButtonStyle(
-    fixedSize: WidgetStateProperty.all(const Size(335, 58)),
+    fixedSize: WidgetStateProperty.all(const Size(335, 40)),
     shape: WidgetStateProperty.all(RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(16),
     )),
@@ -14,7 +14,7 @@ class AppButtonStyle {
     elevation: const WidgetStatePropertyAll(5),
   );
   static final primaryStyleWhite = ButtonStyle(
-    fixedSize: WidgetStateProperty.all(const Size(335, 58)),
+    fixedSize: WidgetStateProperty.all(const Size(335, 40)),
     shape: WidgetStateProperty.all(RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(16),
     )),
@@ -25,7 +25,7 @@ class AppButtonStyle {
 
 
   static final primaryStyleGreenOpacity = ButtonStyle(
-    fixedSize: WidgetStateProperty.all(const Size(335, 58)),
+    fixedSize: WidgetStateProperty.all(const Size(335, 40)),
     shape: WidgetStateProperty.all(RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(5),
     )),

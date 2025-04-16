@@ -54,16 +54,17 @@ class _MainPageState extends State<MainPage> {
                       return Row(
                         children: [
                           CategoryColumn(
-                            title: 'Документ №${group.first.idDoc ?? ''}',
+                            title: group.first.document.name ?? '',
                             cards: group.map((item) {
                               return UserCard(
                                 userId: item.idUser,
-                                userName: item.status ?? '',
+                                userName: '${item.user.name ?? ''} ${item.user.middleName ?? ''}',
                                 orderDate: item.createdAt ?? '',
-                                phoneNumber: '—',
+                                phoneNumber: item.user.phone,
                                 warningMessage: null,
                                 documentId: item.idDoc,
                                 status: item.status,
+                                id: item.id,
                               );
                             }).toList(),
                           ),

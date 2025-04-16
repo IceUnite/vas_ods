@@ -14,7 +14,7 @@ class OrderApiDioService implements OrderApi {
   Future<OrderServiceModel?> getApplicationsByDate({
     required int userId,
     required String token,
-    required String date,
+    String? date,
   }) async {
     try {
       final response = await dio.get(
@@ -22,7 +22,7 @@ class OrderApiDioService implements OrderApi {
         queryParameters: {
           "id_user": userId,
           "token": token,
-          "date": date,
+          if (date != null) "date": date ,
         },
       );
       if (response.statusCode == 204 || response.statusCode == 200) {

@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:intl/intl.dart';
+import 'package:vas_ods/core/enum/application_status.dart';
 import 'package:vas_ods/core/utils/shared_preference.dart';
 import 'package:vas_ods/feature/main_page/domain/entities/order_service_entitie.dart';
 
@@ -12,6 +14,7 @@ import '../cubit/order_cubit.dart';
 part 'order_event.dart';
 
 part 'order_state.dart';
+
 @lazySingleton
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   final OrderUseCase orderUseCase;
@@ -19,6 +22,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   OrderBloc({required this.orderUseCase, required this.orderCubit}) : super(OrderInitial()) {
     on<GetApplicationsByDateEvent>(_onGetApplicationsByDateEvent);
+    on<ChangeDateEvent>(_onChangeDateEvent);
     on<ChangeApplicationStatusEvent>(_onChangeApplicationStatusEvent); // ✅ Добавлено
   }
 
@@ -31,15 +35,17 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final data = await orderUseCase.getApplicationsByDate(
         userId: userId?.toInt() ?? 0,
         token: token ?? '',
-        date: event.date, // ✅ Используем дату из события
+        date: event.date,
       );
       if (data != null) {
         orderCubit.groupByDocumentId(data.data);
         print(data.data);
-      };
-      emit(OrderState(getApplicationsResponse: data));
-    }
-    catch (e) {
+      }
+      ;
+      emit(state.copyWith(
+        getApplicationsResponse: data,
+      ));
+    } catch (e) {
       rethrow;
     }
   }
@@ -54,12 +60,20 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         status: event.status,
         description: event.description,
       );
-
-      // Можно сюда же кинуть повторный fetch заявок или отдельный emit — зависит от логики UI
-      // emit(OrderStatusChangedSuccessfully()); // если нужно отдельное состояние
+      emit(state.copyWith(applicationStatus: ApplicationStatus.success));
+      emit(state.copyWith(applicationStatus: ApplicationStatus.initial));
     } catch (e) {
       debugPrint('Ошибка при обновлении статуса: $e');
       // emit(OrderStatusChangeFailed()); // если нужно отдельное состояние для ошибки
     }
+  }
+
+  Future<void> _onChangeDateEvent(ChangeDateEvent event, Emitter<OrderState> emit) async {
+    print('event : ${event.date}');
+    emit(state.copyWith(
+      selectedDate: event.date,
+      selectedDateFormatted: DateFormat('yyyy-MM-dd').format(event.date),
+    ));
+
   }
 }

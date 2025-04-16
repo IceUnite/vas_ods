@@ -9,6 +9,12 @@ class GetApplicationsByDateEvent extends OrderEvent {
   final String date;
 }
 
+class ChangeDateEvent extends OrderEvent {
+  ChangeDateEvent({required this.date});
+
+  final DateTime date;
+}
+
 class ChangeApplicationStatusEvent extends OrderEvent {
   ChangeApplicationStatusEvent({
     required this.userId,

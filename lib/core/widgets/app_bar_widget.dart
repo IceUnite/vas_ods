@@ -14,7 +14,6 @@ import 'package:vas_ods/core/widgets/vertical_divider_widget.dart' show Vertical
 import 'package:vas_ods/feature/app/routing/route_path.dart' show AppRoute;
 import 'package:vas_ods/feature/auth_page/presentation/bloc/auth_bloc.dart';
 import 'package:vas_ods/feature/main_page/presentation/bloc/order_bloc.dart';
-import 'package:vas_ods/main.dart';
 
 class BreakfastAppBarWidget extends StatefulWidget {
   const BreakfastAppBarWidget({Key? key, required this.selectTime}) : super(key: key);
@@ -28,18 +27,17 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   late Timer _timer;
   late Timer _timerTime;
   late String _formattedTime;
-  // TimeOfDay? _selectedTime;
-  // bool _isChecked = false;
 
   @override
   void initState() {
     super.initState();
     _formattedTime = _formatDateTime(DateTime.now());
-    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: '2025-02-12'));
-    _timer = Timer.periodic(const Duration(minutes: 1), (Timer t) {
+    var state = context.read<OrderBloc>().state;
+    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
+    _timer = Timer.periodic(const Duration(seconds: 60), (Timer t) {
       setState(() {
-        // раз в минуту обновляем часики и перезапрашиваем данные по заявкам
-        context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: '2025-02-12'));
+        state = context.read<OrderBloc>().state;
+        context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
         _formattedTime = _formatDateTime(DateTime.now());
       });
     });
@@ -60,7 +58,6 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   void dispose() {
     _timer.cancel();
     _timerTime.cancel();
-    // _timerUpTime.cancel();
     super.dispose();
   }
 
@@ -68,69 +65,74 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Container(
-      height: 85,
-      color: AppColors.black100,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        children: [
-          SvgPicture.asset(
-            VectorAssets.logoWhite,
-            width: 50,
-            height: 50,
-          ),
-          const SizedBox(width: 12),
-          if (screenWidth > 800) // Показывать длинный текст только на больших экранах
-            const Expanded(
-              flex: 3,
-              child: FittedBox(
-                alignment: Alignment.centerLeft,
-                fit: BoxFit.scaleDown,
+    return BlocBuilder<OrderBloc, OrderState>(
+      builder: (context, state) {
+        return Container(
+          height: 85,
+          color: AppColors.black100,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                VectorAssets.logoWhite,
+                width: 50,
+                height: 50,
+              ),
+              // const SizedBox(width: 12),
+              // if (screenWidth > 800) // Показывать длинный текст только на больших экранах
+              //   const Expanded(
+              //     flex: 2,
+              //     child: FittedBox(
+              //       alignment: Alignment.centerLeft,
+              //       fit: BoxFit.scaleDown,
+              //       child: Text(
+              //         maxLines: 2,
+              //         'Военная академия связи имени маршала Советского Союза С.М. Буденного',
+              //         style: TextStyle(
+              //           fontSize: 18,
+              //           color: AppColors.orange100,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              const Spacer(),
+              DataSelectorWidget(),
+              const SizedBox(width: 12),
+              InkWell(
+                onTap: () {
+                  // handle time select
+                },
                 child: Text(
-                  'Военная академия связи имени маршала Советского союза С.М. Буденного',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: AppColors.orange100,
-                  ),
+                  _formattedTime,
+                  style: AppTypography.font32Regular.copyWith(color: AppColors.orange100),
                 ),
               ),
-            ),
-          const Spacer(),
-          Flexible(child: DataSelectorWidget()),
-          const SizedBox(width: 12),
-          InkWell(
-            onTap: () {
-              // handle time select
-            },
-            child: Text(
-              _formattedTime,
-              style: AppTypography.font32Regular.copyWith(color: AppColors.orange100),
-            ),
-          ),
-          const VerticalDividerWidget(),
-          IconButton(
-            onPressed: () {
-              ApeironSpaceDialog.showActionDialog(
-                context,
-                title: "Вы уверены что хотите выйти из своего аккаунта?",
-                onPressedConfirm: () {},
-                confirmText: "Отмена",
-                closeText: 'Выйти',
-                onPressedClosed: () {
-                  context.read<AuthBloc>().add(ExiteEvent());
-                  context.goNamed(AppRoute.authScreenPath);
+              const VerticalDividerWidget(),
+              IconButton(
+                onPressed: () {
+                  ApeironSpaceDialog.showActionDialog(
+                    context,
+                    title: "Вы уверены что хотите выйти из своего аккаунта?",
+                    onPressedConfirm: () {},
+                    confirmText: "Отмена",
+                    closeText: 'Выйти',
+                    onPressedClosed: () {
+                      context.read<AuthBloc>().add(ExiteEvent());
+                      context.goNamed(AppRoute.authScreenPath);
+                    },
+                  );
                 },
-              );
-            },
-            icon: SvgPicture.asset(
-              VectorAssets.exite,
-              width: 30,
-              height: 30,
-              color: AppColors.white,
-            ),
+                icon: SvgPicture.asset(
+                  VectorAssets.exite,
+                  width: 30,
+                  height: 30,
+                  color: AppColors.white,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

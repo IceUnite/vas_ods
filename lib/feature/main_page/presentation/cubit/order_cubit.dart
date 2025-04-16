@@ -14,11 +14,18 @@ part 'order_state.dart';
 
 @lazySingleton
 class OrderCubit extends Cubit<OrderCubitState> {
-  OrderCubit() : super(OrderCubitState(groupedApplicationList: []));
+  OrderCubit() : super(OrderCubitState(groupedApplicationList: [],
+      selectedDate: DateTime.now(),
+      selectedDateFormatted: DateFormat('yyyy-MM-dd').format(DateTime.now())));
 
   List<List<OrderServiceItem?>?> groupByDocumentId(List<OrderServiceItem> items) {
     final Map<int, List<OrderServiceItem>> grouped = {};
 
+    // Задаем приоритеты статусов
+    const statusOrder = ["in work", "error", "ready", "completed", "cancelled"];
+    final statusPriority = {for (var i = 0; i < statusOrder.length; i++) statusOrder[i]: i};
+
+    // Группировка по idDoc
     for (final item in items) {
       final docId = item.idDoc;
 
@@ -27,9 +34,32 @@ class OrderCubit extends Cubit<OrderCubitState> {
       }
       grouped[docId]!.add(item);
     }
-    emit(OrderCubitState(groupedApplicationList: grouped.values.toList()));
-    return grouped.values.toList();
+
+    /// Сортировка внутри каждой группы по статусу в таком порядке
+    /// ["in work", "error", "ready", "completed", "cancelled"].
+    final sortedGroupedList = grouped.values.map((group) {
+      group.sort((a, b) {
+        final aPriority = statusPriority[a.status] ?? statusOrder.length;
+        final bPriority = statusPriority[b.status] ?? statusOrder.length;
+        return aPriority.compareTo(bPriority);
+      });
+      return group;
+    }).toList();
+
+    emit(OrderCubitState(
+        groupedApplicationList: sortedGroupedList,
+        selectedDate: state.selectedDate,
+        selectedDateFormatted: state.selectedDateFormatted));
+    return sortedGroupedList;
   }
+  void updateSelectedDate(DateTime newDate) {
+    emit(OrderCubitState(
+      groupedApplicationList: state.groupedApplicationList,
+      selectedDate: newDate,
+      selectedDateFormatted: DateFormat('yyyy-MM-dd').format(newDate),
+    ));
+  }
+
 
   static StatusUIConfig getStatusUIConfig(String? status) {
     switch (status) {
@@ -72,8 +102,7 @@ class OrderCubit extends Cubit<OrderCubitState> {
     }
   }
 
-
-///Преобразует формат даты
+  ///Преобразует формат даты
   static String formatDate(String rawDate) {
     final dateTime = DateTime.parse(rawDate);
     final formatter = DateFormat('dd/MM/yyyy');
