@@ -5,12 +5,17 @@ import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
+import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:vas_ods/core/internal/api_constants.dart';
 import 'package:vas_ods/core/internal/di/api_error_interceptor.dart' show ApiErrorInterceptor;
 import 'package:vas_ods/core/internal/di/sl.config.dart' show $initGetIt;
 import 'package:vas_ods/core/repositories/auth_data_repository_impl.dart' show AuthDataRepositoryImpl;
 import 'package:vas_ods/feature/auth_page/data/api/auth_api.dart' show AuthApi;
 import 'package:vas_ods/feature/auth_page/data/api/service/auth_service_api.dart' show AuthApiDioService;
+
+import '../../../feature/debug_menu/mad_inspector.dart';
 
 
 final getIt = GetIt.instance;
@@ -33,10 +38,16 @@ Completer<bool>? refreshCompleter;
 
 @module
 abstract class RegisterModule {
+
+  @lazySingleton
+  Talker get talker => TalkerFlutter.init();
+
   @lazySingleton
   Dio get dio {
+    final talker = getIt<Talker>();
     AuthDataRepositoryImpl authDataRepositoryImpl = AuthDataRepositoryImpl();
     setupCompleter = Completer<bool>();
+
     // refreshTokenStream = _refreshTokenStreamController.stream;
 
     Dio dio = Dio(
@@ -74,7 +85,7 @@ abstract class RegisterModule {
     //   },
     // ));
 
-    // dio.interceptors.add(MadInspector.network.dioInterceptor());
+    dio.interceptors.add(MadInspector.network.dioInterceptor());
     // dio.interceptors.add(ErrorInterceptor());
 
     if (!kReleaseMode) {
@@ -85,6 +96,17 @@ abstract class RegisterModule {
       ));
     }
     dio.interceptors.add(ApiErrorInterceptor());
+    // dio.interceptors.add(
+    //   TalkerDioLogger(
+    //     talker: talker,
+    //     settings: const TalkerDioLoggerSettings(
+    //       printRequestHeaders: true,
+    //       printResponseHeaders: true,
+    //       printRequestData: true,
+    //       printResponseData: true,
+    //     ),
+    //   ),
+    // );
     // if (setupCompleter?.isCompleted == true) return;
     // setupCompleter?.complete(true);
     return dio;

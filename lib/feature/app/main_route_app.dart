@@ -6,7 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:vas_ods/feature/app/init_screen.dart';
 import 'package:vas_ods/feature/app/routing/route_path.dart' show AppRoute;
 import 'package:vas_ods/feature/auth_page/presentation/pages/auth_page.dart';
+import 'package:vas_ods/feature/debug_menu/presentation/pages/debug_menu.dart';
 import 'package:vas_ods/feature/main_page/presentation/pages/main_page.dart';
+import 'package:vas_ods/feature/main_page/presentation/pages/statistics_orders_page.dart';
+
+import '../main_page/presentation/pages/debug_page.dart';
 
 
 class LoggerNavigationObserver extends NavigatorObserver {
@@ -47,13 +51,25 @@ final goRouter = GoRouter(
               child: MainPage(),
             ),
           ),
-          // GoRoute(
-          //   path: AppRoute.debugMenuPath,
-          //   name: AppRoute.debugMenuPath,
-          //   pageBuilder: (context, state) => NoTransitionPage(
-          //     child: DebugMenu(),
-          //   ),
-          // ),
+          GoRoute(
+            path: AppRoute.statisticsScreenPath,
+            name: AppRoute.statisticsScreenPath,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: StatisticsOrdersPage(),
+            ),
+          ),GoRoute(
+            path: AppRoute.debugScreenPath,
+            name: AppRoute.debugScreenPath,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: DebugPage(),
+            ),
+          ),GoRoute(
+            path: AppRoute.debugMenuPath,
+            name: AppRoute.debugMenuPath,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: DebugMenu(),
+            ),
+          ),
           // GoRoute(
           //   path: AppRoute.selectServerPath,
           //   name: AppRoute.selectServerPath,

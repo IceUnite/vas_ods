@@ -17,7 +17,7 @@ class CategoryColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 300,
-      margin: const EdgeInsets.only(right: 12),
+      // margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
         color: AppColors.black50,
         borderRadius: BorderRadius.circular(8),
@@ -54,7 +54,7 @@ class CategoryColumn extends StatelessWidget {
           // Вот здесь делаем скролл максимально возможным
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: cards.length,
               itemBuilder: (context, index) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),

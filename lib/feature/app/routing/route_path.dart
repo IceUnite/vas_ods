@@ -4,7 +4,9 @@ abstract class AppRoute {
 
   //NavBarNavigation
   static const mainScreenPath = 'mainScreenPath';
-  // static const orderScreenPath = '/orderScreenPath';
+  static const statisticsScreenPath = 'statisticsScreenPath';
+  static const debugScreenPath = 'debugScreenPath';
+  static const debugMenuPath = 'debugMenuPath';
   // static const historyScreenPath = '/historyScreenPath';
   // static const profileScreenPath = '/profileScreenPath';
   // static const myDataPagePath = 'myDataPagePath';

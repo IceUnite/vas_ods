@@ -1,6 +1,5 @@
 name: vas_ods
 description: A new Flutter project.
-
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -16,11 +15,14 @@ dependencies:
 
   cupertino_icons: ^1.0.2
 
+  talker_flutter: ^4.7.2
+  talker_dio_logger: ^4.7.2
 
   provider: ^6.1.2
+
   go_router:
     path: ./go_router
-  #  go_router: ^13.2.0
+
   flutter_svg: ^2.0.9
 
   flutter_bloc: ^8.1.4
@@ -44,21 +46,12 @@ dependencies:
   package_info_plus: ^5.0.1
   device_info_plus: ^9.1.2
 
-
   bot_toast: ^4.0.3
   lottie: ^3.1.2
   dotted_decoration: ^2.0.0
   flutter_staggered_animations: ^1.1.1
   device_preview: ^1.2.0
-#  talker_flutter: ^1.7.1
-#  nested: ^1.0.0
-#  firebase_core: ^2.27.0
-#  firebase_messaging: ^14.7.19
 
-#flutter_native_splash:
-#  image: "assets/images/splash.png"
-#  color: "#1C545B"
-#  icon_background_color: "#262626"
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -73,23 +66,16 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
 
   modal_bottom_sheet: ^3.0.0
-
-  google_fonts: 6.2.1
+  google_fonts: ^6.2.1
 
 flutter:
   generate: true
   uses-material-design: true
 
-
   assets:
     - assets/
     - assets/fonts/
     - assets/images/
-
-#  fonts:
-#    - family: Raleway
-#      fonts:
-#        - asset: assets/fonts/raleway.ttf
 
 flutter_intl:
   enabled: true
@@ -98,4 +84,7 @@ flutter_intl:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/app_icon.png"  # Путь к иконке (512x512 или 1024x1024)
+  image_path: "assets/images/app_icon.png"
+
+dependency_overrides:
+  web: ^1.1.0

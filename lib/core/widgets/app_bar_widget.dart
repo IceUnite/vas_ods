@@ -63,6 +63,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final currentLocation = GoRouter.of(context).location;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return BlocBuilder<OrderBloc, OrderState>(
@@ -73,30 +74,51 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              SvgPicture.asset(
-                VectorAssets.logoWhite,
-                width: 50,
-                height: 50,
+              GestureDetector(
+                onTap: _handleLogoTap,
+                child: SvgPicture.asset(
+                  VectorAssets.logoWhite,
+                  width: 50,
+                  height: 50,
+                ),
               ),
-              // const SizedBox(width: 12),
-              // if (screenWidth > 800) // Показывать длинный текст только на больших экранах
-              //   const Expanded(
-              //     flex: 2,
-              //     child: FittedBox(
-              //       alignment: Alignment.centerLeft,
-              //       fit: BoxFit.scaleDown,
-              //       child: Text(
-              //         maxLines: 2,
-              //         'Военная академия связи имени маршала Советского Союза С.М. Буденного',
-              //         style: TextStyle(
-              //           fontSize: 18,
-              //           color: AppColors.orange100,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
               const Spacer(),
-              DataSelectorWidget(),
+
+              // IconButton(
+              //   onPressed: () {
+              //     context.goNamed(AppRoute.debugMenuPath);
+              //   },
+              //   icon: Icon(
+              //     Icons.comments_disabled_outlined,
+              //     color: currentLocation == '/${AppRoute.debugScreenPath}' ? AppColors.orange100 : AppColors.white,
+              //     size: 30,
+              //   ),
+              // ),
+              IconButton(
+                  onPressed: () {
+                    context.goNamed(AppRoute.mainScreenPath);
+                  },
+                  icon: SvgPicture.asset(
+                    VectorAssets.homeOutline,
+                    color: currentLocation == '/${AppRoute.mainScreenPath}' ? AppColors.orange100 : AppColors.white,
+                    width: 30,
+                    height: 30,
+                  )),
+              const VerticalDividerWidget(),
+              IconButton(
+                  onPressed: () {
+                    context.goNamed(AppRoute.statisticsScreenPath);
+                  },
+                  icon: SvgPicture.asset(
+                    VectorAssets.calendarOutline,
+                    color:
+                        currentLocation == '/${AppRoute.statisticsScreenPath}' ? AppColors.orange100 : AppColors.white,
+                    width: 30,
+                    height: 30,
+                  )),
+              const VerticalDividerWidget(),
+              const SizedBox(width: 12),
+              const DataSelectorWidget(),
               const SizedBox(width: 12),
               InkWell(
                 onTap: () {
@@ -135,4 +157,22 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
       },
     );
   }
+  int _logoTapCount = 0;
+  Timer? _resetTapTimer;
+
+  void _handleLogoTap() {
+    _logoTapCount++;
+
+    _resetTapTimer?.cancel();
+    _resetTapTimer = Timer(const Duration(seconds: 2), () {
+      _logoTapCount = 0;
+    });
+
+    if (_logoTapCount >= 5) {
+      context.goNamed(AppRoute.debugMenuPath);
+      _logoTapCount = 0;
+      _resetTapTimer?.cancel();
+    }
+  }
+
 }

@@ -21,7 +21,6 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    // context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: '2025-02-12'));
   }
 
   @override

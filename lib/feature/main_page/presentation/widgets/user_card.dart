@@ -56,7 +56,7 @@ class UserCard extends StatelessWidget {
         builder: (context, state) {
           return Container(
             width: 320,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
+            margin: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
