@@ -27,62 +27,68 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.black50,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BreakfastAppBarWidget(
-            selectTime: TimeOfDay.fromDateTime(DateTime.now()),
-          ),
-          Expanded(
-            child: BlocBuilder<OrderCubit, OrderCubitState>(
-              builder: (context, state) {
-                final groupedList = state.groupedApplicationList;
+      body: BlocBuilder<OrderBloc, OrderState>(
+        builder: (context, state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BreakfastAppBarWidget(
+                selectTime: TimeOfDay.fromDateTime(DateTime.now()),
+              ),
+              Expanded(
+                child: BlocBuilder<OrderCubit, OrderCubitState>(
+                  builder: (context, state) {
+                    final groupedList = state.groupedApplicationList;
 
-                if (groupedList.isEmpty) {
-                  return const Center(child: Text('Заявки не найдены'));
-                }
+                    if (groupedList.isEmpty) {
+                      return const Center(child: Text('Заявки не найдены'));
+                    }
 
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: groupedList.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final group = entry.value ?? [];
+                    return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: groupedList
+                              .asMap()
+                              .entries
+                              .map((entry) {
+                            final index = entry.key;
+                            final group = entry.value ?? [];
 
-                      return Row(
-                        children: [
-                          CategoryColumn(
-                            title: group.first.document.name ?? '',
-                            cards: group.map((item) {
-                              return UserCard(
-                                userId: item.idUser,
-                                userName: '${item.user.name ?? ''} ${item.user.middleName ?? ''}',
-                                orderDate: item.createdAt ?? '',
-                                phoneNumber: item.user.phone,
-                                warningMessage: item.description ,
-                                documentId: item.idDoc,
-                                status: item.status,
-                                id: item.id,
-                                dateUpdate: item.updatedAt,
-                              );
-                            }).toList(),
-                          ),
-                          if (index != groupedList.length - 1)
-                            const VerticalDivider(
-                              color: AppColors.white500,
-                              thickness: 1,
-                              width: 20,
-                            ),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                );
-              },
-            ),
-          )
-        ],
+                            return Row(
+                              children: [
+                                CategoryColumn(
+                                  title: group.first.document.name ?? '',
+                                  cards: group.map((item) {
+                                    return UserCard(
+                                      userId: item.idUser,
+                                      userName: '${item.user.name ?? ''} ${item.user.middleName ?? ''}',
+                                      orderDate: item.createdAt ?? '',
+                                      phoneNumber: item.user.phone,
+                                      warningMessage: item.description,
+                                      documentId: item.idDoc,
+                                      status: item.status,
+                                      id: item.id,
+                                      dateUpdate: item.updatedAt,
+                                    );
+                                  }).toList(),
+                                ),
+                                if (index != groupedList.length - 1)
+                                  const VerticalDivider(
+                                    color: AppColors.white500,
+                                    thickness: 1,
+                                    width: 20,
+                                  ),
+                              ],
+                            );
+                          }).toList(),
+                        ));
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -36,6 +36,11 @@ class UserCard extends StatelessWidget {
     required this.dateUpdate,
   });
 
+  String cleanErrorMessage(String message) {
+    // Убираем лишние пробелы в начале и в конце строки, а также заменяем множественные пробелы и переносы на один пробел
+    return message.trim().replaceAll(RegExp(r'\s+'), ' ');
+  }
+
   @override
   Widget build(BuildContext context) {
     final config = OrderCubit.getStatusUIConfig(status);
@@ -100,9 +105,9 @@ class UserCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 // при изменении на статусы completed и ready не меняется дескрипшн тоесть это сообщение от пользователя
-                                status == 'in work'|| status == 'ready'
-                                    ? 'Сообщение от пользователя "${warningMessage ?? ''}"'
-                                    : 'Вы ответили "${warningMessage ?? ''}"',
+                                status == 'in work' || status == 'ready'
+                                    ? 'Сообщение от пользователя "${cleanErrorMessage(warningMessage ?? '')}"'
+                                    : 'Вы ответили "${cleanErrorMessage(warningMessage ?? '')}"',
                                 style: const TextStyle(fontWeight: FontWeight.w600),
                               ),
                             ),
@@ -136,122 +141,120 @@ class UserCard extends StatelessWidget {
                 // Buttons
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: Column(
-                    children: [
-                      if (status == 'in work') ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              ApeironSpaceDialog.showActionDialog(
-                                context,
-                                title: "Отметить документ выполненным?",
-                                onPressedConfirm: () {
-                                  context.read<OrderBloc>().add(
-                                        ChangeApplicationStatusEvent(
-                                          userId: operId ?? 0,
-                                          token: token ?? '',
-                                          applicationId: id ?? 0,
-                                          status: 'ready',
-                                        ),
-                                      );
-                                },
-                                confirmText: "Да",
-                                closeText: 'Нет',
-                                onPressedClosed: () {},
-                              );
-                            },
-                            style: AppButtonStyle.primaryStyleOrange.copyWith(
-                              minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
-                              padding: WidgetStateProperty.all(EdgeInsets.zero), // без отступов
+                  child: Column(children: [
+                    if (status == 'in work') ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ApeironSpaceDialog.showActionDialog(
+                              context,
+                              title: "Отметить документ выполненным?",
+                              onPressedConfirm: () {
+                                context.read<OrderBloc>().add(
+                                      ChangeApplicationStatusEvent(
+                                        userId: operId ?? 0,
+                                        token: token ?? '',
+                                        applicationId: id ?? 0,
+                                        status: 'ready',
+                                      ),
+                                    );
+                              },
+                              confirmText: "Да",
+                              closeText: 'Нет',
+                              onPressedClosed: () {},
+                            );
+                          },
+                          style: AppButtonStyle.primaryStyleOrange.copyWith(
+                            minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
+                            padding: WidgetStateProperty.all(EdgeInsets.zero), // без отступов
 
-                              shape: WidgetStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              ),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             ),
-                            child: Text(
-                              'Выполнить',
-                              style: AppTypography.font16Raleway.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          ),
+                          child: Text(
+                            'Выполнить',
+                            style: AppTypography.font16Raleway.copyWith(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        // const SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              final TextEditingController errorController = TextEditingController();
+                      ),
+                      // const SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final TextEditingController errorController = TextEditingController();
 
-                              ApeironSpaceDialog.showActionDialog(
-                                context,
-                                title: "Отметить ошибку в документе?",
-                                confirmText: "Нет",
-                                closeText: 'Да',
-                                onPressedConfirm: () {},
-                                onPressedClosed: () {
-                                  context.read<OrderBloc>().add(
-                                        ChangeApplicationStatusEvent(
-                                          userId: operId ?? 0,
-                                          token: token ?? '',
-                                          applicationId: id ?? 0,
-                                          status: 'error',
-                                          description: errorController.text,
-                                        ),
-                                      );
-                                },
-                                showTextField: true,
-                                textFieldController: errorController,
-                              );
-                            },
-                            style: AppButtonStyle.primaryStyleOrange.copyWith(
-                              minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
-                              padding: WidgetStateProperty.all(EdgeInsets.zero), // без отступов
+                            ApeironSpaceDialog.showActionDialog(
+                              context,
+                              title: "Отметить ошибку в документе?",
+                              confirmText: "Нет",
+                              closeText: 'Да',
+                              onPressedConfirm: () {},
+                              onPressedClosed: () {
+                                context.read<OrderBloc>().add(
+                                      ChangeApplicationStatusEvent(
+                                        userId: operId ?? 0,
+                                        token: token ?? '',
+                                        applicationId: id ?? 0,
+                                        status: 'error',
+                                        description: errorController.text,
+                                      ),
+                                    );
+                              },
+                              showTextField: true,
+                              textFieldController: errorController,
+                            );
+                          },
+                          style: AppButtonStyle.primaryStyleOrange.copyWith(
+                            minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
+                            padding: WidgetStateProperty.all(EdgeInsets.zero), // без отступов
 
-                              backgroundColor: const WidgetStatePropertyAll(AppColors.redLight),
-                              shape: WidgetStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              ),
+                            backgroundColor: const WidgetStatePropertyAll(AppColors.redLight),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             ),
-                            child: Text(
-                              'Отметить ошибку',
-                              style: AppTypography.font16Raleway.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          ),
+                          child: Text(
+                            'Отметить ошибку',
+                            style: AppTypography.font16Raleway.copyWith(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      ] else ...[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5.0,right: 5, top: 3),
-                          child: ElevatedButton(
-                            onPressed: null,
-                            style: AppButtonStyle.primaryStyleOrange.copyWith(
-                              minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
-                              padding: WidgetStateProperty.all(EdgeInsets.zero),
-                              // без отступов
+                      ),
+                    ] else ...[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0, right: 5, top: 3),
+                        child: ElevatedButton(
+                          onPressed: null,
+                          style: AppButtonStyle.primaryStyleOrange.copyWith(
+                            minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
+                            padding: WidgetStateProperty.all(EdgeInsets.zero),
+                            // без отступов
 
-                              backgroundColor: WidgetStateProperty.all(config.buttonColor.withOpacity(0.7)),
-                              shape: WidgetStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              ),
-                              foregroundColor: WidgetStateProperty.all(AppColors.white),
+                            backgroundColor: WidgetStateProperty.all(config.buttonColor.withOpacity(0.7)),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             ),
-                            child: Text(
-                              config.buttonText,
-                              style: AppTypography.font16Raleway.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            foregroundColor: WidgetStateProperty.all(AppColors.white),
+                          ),
+                          child: Text(
+                            config.buttonText,
+                            style: AppTypography.font16Raleway.copyWith(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      ]
+                      ),
                     ]
-                  ),
+                  ]),
                 ),
                 if (dateUpdate != null && dateUpdate!.isNotEmpty)
                   Padding(

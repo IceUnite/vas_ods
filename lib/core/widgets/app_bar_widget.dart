@@ -15,6 +15,8 @@ import 'package:vas_ods/feature/app/routing/route_path.dart' show AppRoute;
 import 'package:vas_ods/feature/auth_page/presentation/bloc/auth_bloc.dart';
 import 'package:vas_ods/feature/main_page/presentation/bloc/order_bloc.dart';
 
+import '../../feature/main_page/presentation/cubit/order_cubit.dart';
+
 class BreakfastAppBarWidget extends StatefulWidget {
   const BreakfastAppBarWidget({Key? key, required this.selectTime}) : super(key: key);
   final TimeOfDay? selectTime;
@@ -81,8 +83,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
                   height: 50,
                 ),
               ),
-              const Spacer(),
-
+              Spacer(),
               IconButton(
                   onPressed: () {
                     context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
@@ -130,6 +131,70 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
                 ),
               ),
               const VerticalDividerWidget(),
+              Container(
+                width: 200,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: AppColors.black100,
+                  border: Border.all(
+                    color: AppColors.orange, // Оранжевая рамка
+                    width: 1, // Толщина рамки
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Spacer(),
+                      Row(
+                        children: [
+                          Text(
+                            'Документов на ${OrderCubit.formatDate(state.selectedDate.toString())}',
+                            style: const TextStyle(
+                              color: AppColors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${state.applicationCount}',
+                            style: const TextStyle(
+                              color: AppColors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Row(
+                        children: [
+                          const Text(
+                            'Ожидают выполнения: ',
+                            style: TextStyle(
+                              color: AppColors.orange,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${state.applicationInWorkCount}',
+                            style: const TextStyle(
+                              color: AppColors.orange,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+              const VerticalDividerWidget(),
+
               IconButton(
                 onPressed: () {
                   ApeironSpaceDialog.showActionDialog(

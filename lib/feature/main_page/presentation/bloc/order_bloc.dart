@@ -31,24 +31,32 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   Future<void> _onGetApplicationsByDateEvent(GetApplicationsByDateEvent event, Emitter<OrderState> emit) async {
     final userId = sharedPrefsRawProvider.getInt(SharedKeyWords.userId);
     final token = sharedPrefsRawProvider.getString(SharedKeyWords.accessTokenKey);
+
     try {
       final data = await orderUseCase.getApplicationsByDate(
         userId: userId?.toInt() ?? 0,
         token: token ?? '',
         date: event.date,
       );
+
       if (data != null) {
         orderCubit.groupByDocumentId(data.data);
         print(data.data);
+
+        // Подсчитываем количество заявок со статусом "in work"
+        final inWorkCount = data.data.where((item) => item.status == 'in work').length;
+
+        emit(state.copyWith(
+          getApplicationsResponse: data,
+          applicationCount: data.data.length,
+          applicationInWorkCount: inWorkCount, // Ставим количество заявок со статусом "in work"
+        ));
       }
-      ;
-      emit(state.copyWith(
-        getApplicationsResponse: data,
-      ));
     } catch (e) {
       rethrow;
     }
   }
+
 
   /// Обработка обновления статуса заявки
   Future<void> _onChangeApplicationStatusEvent(ChangeApplicationStatusEvent event, Emitter<OrderState> emit) async {
@@ -74,6 +82,5 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       selectedDate: event.date,
       selectedDateFormatted: DateFormat('yyyy-MM-dd').format(event.date),
     ));
-
   }
 }
