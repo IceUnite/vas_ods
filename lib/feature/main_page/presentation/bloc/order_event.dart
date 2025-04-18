@@ -8,6 +8,9 @@ class GetApplicationsByDateEvent extends OrderEvent {
 
   final String date;
 }
+class GetAllApplicationsEvent extends OrderEvent {
+  GetAllApplicationsEvent();
+}
 
 class ChangeDateEvent extends OrderEvent {
   ChangeDateEvent({required this.date});

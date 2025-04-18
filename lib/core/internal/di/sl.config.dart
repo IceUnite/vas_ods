@@ -12,6 +12,7 @@
 import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:talker_flutter/talker_flutter.dart' as _i207;
 
 import '../../../feature/auth_page/data/api/service/auth_service_api.dart'
     as _i785;
@@ -46,6 +47,7 @@ _i174.GetIt $initGetIt(
     environmentFilter,
   );
   final registerModule = _$RegisterModule();
+  gh.lazySingleton<_i207.Talker>(() => registerModule.talker);
   gh.lazySingleton<_i361.Dio>(() => registerModule.dio);
   gh.lazySingleton<_i959.BotToastDi>(() => _i959.BotToastDi());
   gh.lazySingleton<_i986.OrderCubit>(() => _i986.OrderCubit());

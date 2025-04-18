@@ -21,6 +21,7 @@ class UserCard extends StatelessWidget {
   final int? documentId;
   final String? warningMessage;
   final String? status;
+  final String? dateUpdate;
 
   const UserCard({
     super.key,
@@ -32,7 +33,13 @@ class UserCard extends StatelessWidget {
     required this.documentId,
     required this.warningMessage,
     required this.status,
+    required this.dateUpdate,
   });
+
+  String cleanErrorMessage(String message) {
+    // Убираем лишние пробелы в начале и в конце строки, а также заменяем множественные пробелы и переносы на один пробел
+    return message.trim().replaceAll(RegExp(r'\s+'), ' ');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +63,7 @@ class UserCard extends StatelessWidget {
         builder: (context, state) {
           return Container(
             width: 320,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
+            margin: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
@@ -83,7 +90,7 @@ class UserCard extends StatelessWidget {
                 ),
 
                 // Warning box
-                warningMessage != null
+                warningMessage != null && warningMessage != ''
                     ? Container(
                         margin: const EdgeInsets.all(8),
                         padding: const EdgeInsets.all(12),
@@ -97,14 +104,17 @@ class UserCard extends StatelessWidget {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                warningMessage ?? '',
+                                // при изменении на статусы completed и ready не меняется дескрипшн тоесть это сообщение от пользователя
+                                status == 'in work' || status == 'ready'
+                                    ? 'Сообщение от пользователя "${cleanErrorMessage(warningMessage ?? '')}"'
+                                    : 'Вы ответили "${cleanErrorMessage(warningMessage ?? '')}"',
                                 style: const TextStyle(fontWeight: FontWeight.w600),
                               ),
                             ),
                           ],
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
 
                 Container(height: 1, color: const Color(0xFFE0E0E0)),
 
@@ -131,137 +141,133 @@ class UserCard extends StatelessWidget {
                 // Buttons
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: Column(
-                    children: [
-                      if (status == 'in work') ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              ApeironSpaceDialog.showActionDialog(
-                                context,
-                                title: "Отметить документ выполненным?",
-                                onPressedConfirm: () {
-                                  context.read<OrderBloc>().add(
-                                        ChangeApplicationStatusEvent(
-                                          userId: operId ?? 0,
-                                          token: token ?? '',
-                                          applicationId: id ?? 0,
-                                          status: 'ready',
-                                        ),
-                                      );
-                                },
-                                confirmText: "Да",
-                                closeText: 'Нет',
-                                onPressedClosed: () {},
-                              );
-                            },
-                            style: AppButtonStyle.primaryStyleOrange.copyWith(
-                              minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
-                              padding: WidgetStateProperty.all(EdgeInsets.zero), // без отступов
+                  child: Column(children: [
+                    if (status == 'in work') ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ApeironSpaceDialog.showActionDialog(
+                              context,
+                              title: "Отметить документ выполненным?",
+                              onPressedConfirm: () {
+                                context.read<OrderBloc>().add(
+                                      ChangeApplicationStatusEvent(
+                                        userId: operId ?? 0,
+                                        token: token ?? '',
+                                        applicationId: id ?? 0,
+                                        status: 'ready',
+                                      ),
+                                    );
+                              },
+                              confirmText: "Да",
+                              closeText: 'Нет',
+                              onPressedClosed: () {},
+                            );
+                          },
+                          style: AppButtonStyle.primaryStyleOrange.copyWith(
+                            minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
+                            padding: WidgetStateProperty.all(EdgeInsets.zero), // без отступов
 
-                              shape: WidgetStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              ),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             ),
-                            child: Text(
-                              'Выполнить',
-                              style: AppTypography.font16Raleway.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          ),
+                          child: Text(
+                            'Выполнить',
+                            style: AppTypography.font16Raleway.copyWith(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        // const SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              final TextEditingController errorController = TextEditingController();
+                      ),
+                      // const SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final TextEditingController errorController = TextEditingController();
 
-                              ApeironSpaceDialog.showActionDialog(
-                                context,
-                                title: "Отметить ошибку в документе?",
-                                confirmText: "Нет",
-                                closeText: 'Да',
-                                onPressedConfirm: () {},
-                                onPressedClosed: () {
-                                  context.read<OrderBloc>().add(
-                                        ChangeApplicationStatusEvent(
-                                          userId: operId ?? 0,
-                                          token: token ?? '',
-                                          applicationId: id ?? 0,
-                                          status: 'error',
-                                          description: errorController.text,
-                                        ),
-                                      );
-                                },
-                                showTextField: true,
-                                textFieldController: errorController,
-                              );
-                            },
-                            style: AppButtonStyle.primaryStyleOrange.copyWith(
-                              minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
-                              padding: WidgetStateProperty.all(EdgeInsets.zero), // без отступов
+                            ApeironSpaceDialog.showActionDialog(
+                              context,
+                              title: "Отметить ошибку в документе?",
+                              confirmText: "Нет",
+                              closeText: 'Да',
+                              onPressedConfirm: () {},
+                              onPressedClosed: () {
+                                context.read<OrderBloc>().add(
+                                      ChangeApplicationStatusEvent(
+                                        userId: operId ?? 0,
+                                        token: token ?? '',
+                                        applicationId: id ?? 0,
+                                        status: 'error',
+                                        description: errorController.text,
+                                      ),
+                                    );
+                              },
+                              showTextField: true,
+                              textFieldController: errorController,
+                            );
+                          },
+                          style: AppButtonStyle.primaryStyleOrange.copyWith(
+                            minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
+                            padding: WidgetStateProperty.all(EdgeInsets.zero), // без отступов
 
-                              backgroundColor: const WidgetStatePropertyAll(AppColors.redLight),
-                              shape: WidgetStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              ),
+                            backgroundColor: const WidgetStatePropertyAll(AppColors.redLight),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             ),
-                            child: Text(
-                              'Отметить ошибку',
-                              style: AppTypography.font16Raleway.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          ),
+                          child: Text(
+                            'Отметить ошибку',
+                            style: AppTypography.font16Raleway.copyWith(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      ] else ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
-                          child: ElevatedButton(
-                            onPressed: null,
-                            style: AppButtonStyle.primaryStyleOrange.copyWith(
-                              minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
-                              padding: WidgetStateProperty.all(EdgeInsets.zero),
-                              // без отступов
+                      ),
+                    ] else ...[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0, right: 5, top: 3),
+                        child: ElevatedButton(
+                          onPressed: null,
+                          style: AppButtonStyle.primaryStyleOrange.copyWith(
+                            minimumSize: WidgetStateProperty.all(const Size.fromHeight(20)),
+                            padding: WidgetStateProperty.all(EdgeInsets.zero),
+                            // без отступов
 
-                              backgroundColor: WidgetStateProperty.all(config.buttonColor.withOpacity(0.7)),
-                              shape: WidgetStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              ),
-                              foregroundColor: WidgetStateProperty.all(AppColors.white),
+                            backgroundColor: WidgetStateProperty.all(config.buttonColor.withOpacity(0.7)),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                             ),
-                            child: Text(
-                              config.buttonText,
-                              style: AppTypography.font16Raleway.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            foregroundColor: WidgetStateProperty.all(AppColors.white),
+                          ),
+                          child: Text(
+                            config.buttonText,
+                            style: AppTypography.font16Raleway.copyWith(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        if (warningMessage != null && warningMessage!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Text(
-                              warningMessage!,
-                              style: AppTypography.font16Raleway.copyWith(
-                                color: AppColors.redLight,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                      ]
-                    ],
-                  ),
+                      ),
+                    ]
+                  ]),
                 ),
-                const SizedBox(height: 12),
+                if (dateUpdate != null && dateUpdate!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+                    child: Text(
+                      OrderCubit.formatStatusDate(dateUpdate!, status!), // передаём дату и статус
+                      style: AppTypography.font14Regular.copyWith(
+                        color: AppColors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
               ],
             ),
           );

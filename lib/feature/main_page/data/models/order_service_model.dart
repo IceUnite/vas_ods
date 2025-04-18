@@ -6,8 +6,8 @@ part 'order_service_model.g.dart';
 @immutable
 @JsonSerializable()
 class OrderServiceModel {
-  final int code;
-  final List<OrderServiceItem> data;
+  final int? code;
+  final List<OrderServiceItem>? data;
 
   const OrderServiceModel({
     required this.code,
@@ -23,29 +23,29 @@ class OrderServiceModel {
 @immutable
 @JsonSerializable()
 class OrderServiceItem {
-  final int id;
+  final int? id;
 
   @JsonKey(name: 'id_doc')
-  final int idDoc;
+  final int? idDoc;
 
-  final String description;
+  final String? description;
 
   @JsonKey(name: 'created_at')
-  final String createdAt;
+  final String? createdAt;
 
   @JsonKey(name: 'id_user')
-  final int idUser;
+  final int? idUser;
 
-  final String status;
+  final String? status;
 
-  final String date;
+  final String? date;
 
   @JsonKey(name: 'updated_at')
-  final String updatedAt;
+  final String? updatedAt;
 
   // Добавление вложенных объектов
-  final User user;
-  final Document document;
+  final User? user;
+  final Document? document;
 
   const OrderServiceItem({
     required this.id,
@@ -69,7 +69,7 @@ class OrderServiceItem {
 @immutable
 @JsonSerializable()
 class User {
-  final int id;
+  final int? id;
   final String? name;
   final String? middleName;
   final String? phone;
@@ -89,11 +89,11 @@ class User {
 @immutable
 @JsonSerializable()
 class Document {
-  final int id;
-  final String name;
-  final String description;
+  final int? id;
+  final String? name;
+  final String? description;
   @JsonKey(name: 'min_time')
-  final String minTime;
+  final String? minTime;
 
   const Document({
     required this.id,

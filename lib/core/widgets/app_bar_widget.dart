@@ -15,9 +15,12 @@ import 'package:vas_ods/feature/app/routing/route_path.dart' show AppRoute;
 import 'package:vas_ods/feature/auth_page/presentation/bloc/auth_bloc.dart';
 import 'package:vas_ods/feature/main_page/presentation/bloc/order_bloc.dart';
 
+import '../../feature/main_page/presentation/cubit/order_cubit.dart';
+
 class BreakfastAppBarWidget extends StatefulWidget {
-  const BreakfastAppBarWidget({Key? key, required this.selectTime}) : super(key: key);
+  const BreakfastAppBarWidget({Key? key, required this.selectTime, required this.isActiveInitState}) : super(key: key);
   final TimeOfDay? selectTime;
+  final bool isActiveInitState;
 
   @override
   _BreakfastAppBarWidgetState createState() => _BreakfastAppBarWidgetState();
@@ -25,22 +28,28 @@ class BreakfastAppBarWidget extends StatefulWidget {
 
 class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   late Timer _timer;
-  late Timer _timerTime;
   late String _formattedTime;
 
   @override
   void initState() {
     super.initState();
     _formattedTime = _formatDateTime(DateTime.now());
-    var state = context.read<OrderBloc>().state;
-    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
-    _timer = Timer.periodic(const Duration(seconds: 60), (Timer t) {
-      setState(() {
-        state = context.read<OrderBloc>().state;
-        context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
-        _formattedTime = _formatDateTime(DateTime.now());
+
+    if (widget.isActiveInitState) {
+      final orderBloc = context.read<OrderBloc>();
+      final selectedDate = orderBloc.state.selectedDateFormatted ?? '';
+
+      // начальный запрос
+      orderBloc.add(GetApplicationsByDateEvent(date: selectedDate));
+
+      _timer = Timer.periodic(const Duration(seconds: 60), (Timer t) {
+        final updatedDate = orderBloc.state.selectedDateFormatted ?? '';
+        orderBloc.add(GetApplicationsByDateEvent(date: updatedDate));
+        setState(() {
+          _formattedTime = _formatDateTime(DateTime.now());
+        });
       });
-    });
+    } else {}
   }
 
   String _formatDateTime(DateTime dateTime) {
@@ -55,15 +64,18 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   }
 
   @override
+  @override
   void dispose() {
-    _timer.cancel();
-    _timerTime.cancel();
+    if (widget.isActiveInitState) {
+      _timer.cancel();
+    }
+    _resetTapTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final currentLocation = GoRouter.of(context).location;
 
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
@@ -73,31 +85,52 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              SvgPicture.asset(
-                VectorAssets.logoWhite,
-                width: 50,
-                height: 50,
+              GestureDetector(
+                onTap: _handleLogoTap,
+                child: SvgPicture.asset(
+                  VectorAssets.logoWhite,
+                  width: 50,
+                  height: 50,
+                ),
               ),
-              // const SizedBox(width: 12),
-              // if (screenWidth > 800) // Показывать длинный текст только на больших экранах
-              //   const Expanded(
-              //     flex: 2,
-              //     child: FittedBox(
-              //       alignment: Alignment.centerLeft,
-              //       fit: BoxFit.scaleDown,
-              //       child: Text(
-              //         maxLines: 2,
-              //         'Военная академия связи имени маршала Советского Союза С.М. Буденного',
-              //         style: TextStyle(
-              //           fontSize: 18,
-              //           color: AppColors.orange100,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
               const Spacer(),
-              DataSelectorWidget(),
+              IconButton(
+                  onPressed: () {
+                    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
+                  },
+                  icon: SvgPicture.asset(
+                    VectorAssets.refresh,
+                    color: AppColors.white,
+                    width: 30,
+                    height: 30,
+                  )),
+              const VerticalDividerWidget(),
+              IconButton(
+                  onPressed: () {
+                    context.goNamed(AppRoute.mainScreenPath);
+                  },
+                  icon: SvgPicture.asset(
+                    VectorAssets.homeOutline,
+                    color: currentLocation == '/${AppRoute.mainScreenPath}' ? AppColors.orange100 : AppColors.white,
+                    width: 30,
+                    height: 30,
+                  )),
+              const VerticalDividerWidget(),
+              IconButton(
+                  onPressed: () {
+                    context.goNamed(AppRoute.statisticsScreenPath);
+                  },
+                  icon: SvgPicture.asset(
+                    VectorAssets.calendarOutline,
+                    color:
+                        currentLocation == '/${AppRoute.statisticsScreenPath}' ? AppColors.orange100 : AppColors.white,
+                    width: 30,
+                    height: 30,
+                  )),
+              const VerticalDividerWidget(),
               const SizedBox(width: 12),
+              const DataSelectorWidget(),
+              const VerticalDividerWidget(),
               InkWell(
                 onTap: () {
                   // handle time select
@@ -107,6 +140,71 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
                   style: AppTypography.font32Regular.copyWith(color: AppColors.orange100),
                 ),
               ),
+              if (widget.isActiveInitState == true) ...[
+                const VerticalDividerWidget(),
+                Container(
+                  width: 200,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.black100,
+                    border: Border.all(
+                      color: AppColors.orange, // Оранжевая рамка
+                      width: 1, // Толщина рамки
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Text(
+                              'Документов на ${OrderCubit.formatDate(state.selectedDate.toString())}',
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              '${state.applicationCount}',
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            const Text(
+                              'Ожидают выполнения: ',
+                              style: TextStyle(
+                                color: AppColors.orange,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              '${state.applicationInWorkCount}',
+                              style: const TextStyle(
+                                color: AppColors.orange,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
               const VerticalDividerWidget(),
               IconButton(
                 onPressed: () {
@@ -134,5 +232,23 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
         );
       },
     );
+  }
+
+  int _logoTapCount = 0;
+  Timer? _resetTapTimer;
+
+  void _handleLogoTap() {
+    _logoTapCount++;
+
+    _resetTapTimer?.cancel();
+    _resetTapTimer = Timer(const Duration(seconds: 2), () {
+      _logoTapCount = 0;
+    });
+
+    if (_logoTapCount >= 5) {
+      context.goNamed(AppRoute.debugMenuPath);
+      _logoTapCount = 0;
+      _resetTapTimer?.cancel();
+    }
   }
 }

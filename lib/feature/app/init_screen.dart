@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vas_ods/core/resources/assets/resources.dart';
 import 'package:vas_ods/core/theme/app_colors.dart';
 import 'package:vas_ods/feature/auth_page/presentation/bloc/auth_bloc.dart' show AuthBloc, AuthFailure, AuthSuccess, AuthUnauthorized, CheckTokenEvent;
 
@@ -55,17 +53,14 @@ class _InitScreenState extends State<InitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: Center(
-        child: SizedBox(
-          width: 150,
-          height: 150,
-          child: SvgPicture.asset(
-            ImageAssets.logo,
-            color: AppColors.orange200,
-          ),
-        ),
+    return const Scaffold(
+      backgroundColor: AppColors.appBackground,
+      body: SizedBox(
+        // width: 150,
+        // height: 140,
+        // child: SvgPicture.asset(
+        //   VectorAssets.logoWhite,
+        // ),
       ),
     );
   }

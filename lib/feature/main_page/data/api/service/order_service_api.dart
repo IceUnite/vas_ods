@@ -36,6 +36,7 @@ class OrderApiDioService implements OrderApi {
   }
 
   // Новый метод
+  @override
   Future<void> updateApplication({
     required int userId,
     required String token,
@@ -51,7 +52,7 @@ class OrderApiDioService implements OrderApi {
           "token": token,
           "id_app": applicationId,
           "stat": status,
-          if (description != null) "description": description,
+          "description": description,
         },
       );
 

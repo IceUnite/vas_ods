@@ -24,6 +24,9 @@ class _MyDateWidgetState extends State<DataSelectorWidget> {
       children: <Widget>[
         BlocBuilder<OrderBloc, OrderState>(
           builder: (context, state) {
+            // Получаем selectedDate из состояния блока, если оно существует
+            DateTime currentSelectedDate = state.selectedDate ?? DateTime.now();
+
             return ConstrainedBox(
               constraints: const BoxConstraints(
                 minWidth: 150,
@@ -39,7 +42,7 @@ class _MyDateWidgetState extends State<DataSelectorWidget> {
                     padding: EdgeInsets.zero,
                   ),
                   child: Text(
-                    DateFormat('EEE, d MMMM', 'ru_RU').format(selectedDate),
+                    DateFormat('EEE, d MMMM', 'ru_RU').format(currentSelectedDate),
                     style: AppTypography.font30Regular.copyWith(
                       color: AppColors.orange100,
                     ),
@@ -67,8 +70,7 @@ class _MyDateWidgetState extends State<DataSelectorWidget> {
               primary: AppColors.orange100, // заголовок и кнопки
               onPrimary: Colors.white, // текст заголовка
               onSurface: Colors.black, // текст внутри календаря
-            ),
-            dialogBackgroundColor: Colors.white,
+            ), dialogTheme: const DialogThemeData(backgroundColor: Colors.white),
           ),
           child: child!,
         );
@@ -81,7 +83,6 @@ class _MyDateWidgetState extends State<DataSelectorWidget> {
       });
 
       // 🔥 Добавляем вызов события блока
-      // final formattedDate = DateFormat('yyyy-MM-dd').format(picked);
       context.read<OrderBloc>().add(ChangeDateEvent(date: selectedDate));
       context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: DateFormat('yyyy-MM-dd').format(selectedDate)));
 
@@ -91,6 +92,4 @@ class _MyDateWidgetState extends State<DataSelectorWidget> {
       }
     }
   }
-
-
 }
