@@ -12,7 +12,7 @@ class Logs extends StatelessWidget {
 
   final List<LogModel> items = MadInspectorLogger.logs.reversed.toList();
 
-  const Logs({super.key});
+   Logs({super.key});
 
   @override
   Widget build(BuildContext context) {

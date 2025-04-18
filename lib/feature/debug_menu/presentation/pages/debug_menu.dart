@@ -79,11 +79,11 @@ class _MadInspectorViewState extends State<DebugMenu> with TickerProviderStateMi
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const <Widget>[
+        children: <Widget>[
           Center(
             child: Logs(),
           ),
-          Center(
+          const Center(
             child: NetworkLogs(),
           ),
         ],
