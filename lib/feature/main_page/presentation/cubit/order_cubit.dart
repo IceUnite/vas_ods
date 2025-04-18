@@ -102,6 +102,26 @@ class OrderCubit extends Cubit<OrderCubitState> {
     }
   }
 
+  static String formatStatusDate(String rawDate, String status) {
+    try {
+      final date = DateTime.parse(rawDate);
+      final formattedDate = DateFormat('dd/MM/yy').format(date);
+      final formattedTime = DateFormat('HH:mm').format(date);
+
+      final statusText = {
+        'ready': 'Документ готов',
+        'in work': 'Заявка поступила',
+        'cancelled': 'Заказ отменён',
+        'error': 'Отмечена ошибка',
+        'completed': 'Документ получен',
+      }[status.toLowerCase()] ?? 'Дата обновления';
+
+      return '$statusText: $formattedDate \n в $formattedTime';
+    } catch (e) {
+      return rawDate;
+    }
+  }
+
   ///Преобразует формат даты
   static String formatDate(String rawDate) {
     final dateTime = DateTime.parse(rawDate);

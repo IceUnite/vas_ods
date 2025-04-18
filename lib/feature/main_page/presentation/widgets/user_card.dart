@@ -21,6 +21,7 @@ class UserCard extends StatelessWidget {
   final int? documentId;
   final String? warningMessage;
   final String? status;
+  final String? dateUpdate;
 
   const UserCard({
     super.key,
@@ -32,6 +33,7 @@ class UserCard extends StatelessWidget {
     required this.documentId,
     required this.warningMessage,
     required this.status,
+    required this.dateUpdate,
   });
 
   @override
@@ -98,7 +100,7 @@ class UserCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 // при изменении на статусы completed и ready не меняется дескрипшн тоесть это сообщение от пользователя
-                                status == 'in work' || status == 'completed' || status == 'ready'
+                                status == 'in work'|| status == 'ready'
                                     ? 'Сообщение от пользователя "${warningMessage ?? ''}"'
                                     : 'Вы ответили "${warningMessage ?? ''}"',
                                 style: const TextStyle(fontWeight: FontWeight.w600),
@@ -224,7 +226,7 @@ class UserCard extends StatelessWidget {
                         ),
                       ] else ...[
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
+                          padding: const EdgeInsets.only(left: 5.0,right: 5, top: 3),
                           child: ElevatedButton(
                             onPressed: null,
                             style: AppButtonStyle.primaryStyleOrange.copyWith(
@@ -247,26 +249,22 @@ class UserCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 8),
-
-                        //TODO переделать описание
-                        if (warningMessage != null && warningMessage!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Text(
-                              warningMessage!,
-                              style: AppTypography.font16Raleway.copyWith(
-                                color: AppColors.redLight,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
                       ]
-                    ],
+                    ]
                   ),
                 ),
-                const SizedBox(height: 12),
+                if (dateUpdate != null && dateUpdate!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+                    child: Text(
+                      OrderCubit.formatStatusDate(dateUpdate!, status!), // передаём дату и статус
+                      style: AppTypography.font14Regular.copyWith(
+                        color: AppColors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
               ],
             ),
           );

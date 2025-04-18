@@ -51,7 +51,7 @@ class OrderApiDioService implements OrderApi {
           "token": token,
           "id_app": applicationId,
           "stat": status,
-          if (description != null) "description": description,
+          "description": description,
         },
       );
 

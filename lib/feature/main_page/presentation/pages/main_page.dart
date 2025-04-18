@@ -64,6 +64,7 @@ class _MainPageState extends State<MainPage> {
                                 documentId: item.idDoc,
                                 status: item.status,
                                 id: item.id,
+                                dateUpdate: item.updatedAt,
                               );
                             }).toList(),
                           ),

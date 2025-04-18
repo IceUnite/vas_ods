@@ -83,16 +83,6 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
               ),
               const Spacer(),
 
-              // IconButton(
-              //   onPressed: () {
-              //     context.goNamed(AppRoute.debugMenuPath);
-              //   },
-              //   icon: Icon(
-              //     Icons.comments_disabled_outlined,
-              //     color: currentLocation == '/${AppRoute.debugScreenPath}' ? AppColors.orange100 : AppColors.white,
-              //     size: 30,
-              //   ),
-              // ),
               IconButton(
                   onPressed: () {
                     context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
