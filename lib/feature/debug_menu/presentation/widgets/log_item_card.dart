@@ -7,7 +7,7 @@ import '../../../../core/theme/typography.dart';
 
 class LogItemCard extends StatelessWidget {
 
-  const LogItemCard({
+  const LogItemCard({super.key, 
     required this.title,
     required this.details,
   });

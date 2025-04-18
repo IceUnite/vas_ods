@@ -93,7 +93,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
                   height: 50,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               IconButton(
                   onPressed: () {
                     context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
@@ -159,7 +159,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Spacer(),
+                        const Spacer(),
                         Row(
                           children: [
                             Text(
@@ -179,7 +179,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
                             ),
                           ],
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Row(
                           children: [
                             const Text(
@@ -199,7 +199,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
                             ),
                           ],
                         ),
-                        Spacer(),
+                        const Spacer(),
                       ],
                     ),
                   ),

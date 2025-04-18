@@ -8,7 +8,7 @@ import '../../../../core/theme/typography.dart';
 
 class LogListItem extends StatelessWidget {
 
-  const LogListItem({
+  const LogListItem({super.key, 
     required this.logModel
   });
 

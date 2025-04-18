@@ -67,7 +67,7 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
               builder: (context, state) {
                 final stats = context.read<OrderCubit>().state.groupedStats;
 
-                if (stats == null || stats.isEmpty) {
+                if (stats.isEmpty) {
                   return const Center(
                     child: Text(
                       'Нет данных',

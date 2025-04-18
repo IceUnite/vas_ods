@@ -27,7 +27,7 @@ class CategoryColumn extends StatelessWidget {
         children: [
           // Заголовок категории
           Container(
-            margin: EdgeInsets.only(left: 20),
+            margin: const EdgeInsets.only(left: 20),
             height: 70,
             child: Align(
               alignment: Alignment.centerLeft,

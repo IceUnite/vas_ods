@@ -70,8 +70,7 @@ class _MyDateWidgetState extends State<DataSelectorWidget> {
               primary: AppColors.orange100, // заголовок и кнопки
               onPrimary: Colors.white, // текст заголовка
               onSurface: Colors.black, // текст внутри календаря
-            ),
-            dialogBackgroundColor: Colors.white,
+            ), dialogTheme: const DialogThemeData(backgroundColor: Colors.white),
           ),
           child: child!,
         );

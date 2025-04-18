@@ -77,11 +77,11 @@ class _DebugMenuState extends State<SelectServerMenu> {
                     }
                   },
                   style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(const Size(335, 53)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    fixedSize: WidgetStateProperty.all(const Size(335, 53)),
+                    shape: WidgetStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                     )),
-                    backgroundColor: MaterialStateProperty.all(AppColors.black100),
+                    backgroundColor: WidgetStateProperty.all(AppColors.black100),
                   ),
                   child: const Text(
                     'Выбрать',
@@ -98,11 +98,11 @@ class _DebugMenuState extends State<SelectServerMenu> {
                     // context.goNamed(AppRoute.breakfastScreenPath);
                   },
                   style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(const Size(335, 53)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    fixedSize: WidgetStateProperty.all(const Size(335, 53)),
+                    shape: WidgetStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                     )),
-                    backgroundColor: MaterialStateProperty.all(AppColors.black100),
+                    backgroundColor: WidgetStateProperty.all(AppColors.black100),
                   ),
                   child: const Text(
                     'Закрыть',

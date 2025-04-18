@@ -114,7 +114,7 @@ class UserCard extends StatelessWidget {
                           ],
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
 
                 Container(height: 1, color: const Color(0xFFE0E0E0)),
 

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vas_ods/core/resources/assets/resources.dart';
 import 'package:vas_ods/core/theme/app_colors.dart';
 import 'package:vas_ods/feature/auth_page/presentation/bloc/auth_bloc.dart' show AuthBloc, AuthFailure, AuthSuccess, AuthUnauthorized, CheckTokenEvent;
 

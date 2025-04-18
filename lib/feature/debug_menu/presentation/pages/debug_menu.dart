@@ -9,6 +9,8 @@ import 'logs.dart';
 import 'network_logs.dart';
 
 class DebugMenu extends StatefulWidget {
+  const DebugMenu({super.key});
+
   @override
   State<DebugMenu> createState() => _MadInspectorViewState();
 }
@@ -77,7 +79,7 @@ class _MadInspectorViewState extends State<DebugMenu> with TickerProviderStateMi
       ),
       body: TabBarView(
         controller: _tabController,
-        children: <Widget>[
+        children: const <Widget>[
           Center(
             child: Logs(),
           ),

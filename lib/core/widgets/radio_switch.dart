@@ -103,7 +103,7 @@ class RadioItemWidget extends StatelessWidget {
                     AppColors.orange,
                   ),
                   child:  Padding(
-                    padding: EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(2),
                     child: SvgPicture.asset(
                      'assets/images/ic_check.svg',
                       semanticsLabel: 'check-svg',

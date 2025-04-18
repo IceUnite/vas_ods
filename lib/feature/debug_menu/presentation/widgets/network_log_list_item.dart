@@ -8,7 +8,7 @@ import '../../../../core/theme/typography.dart';
 
 class NetworkLogListItem extends StatelessWidget {
 
-  const NetworkLogListItem({
+  const NetworkLogListItem({super.key, 
     required this.networkLogModel
   });
 
@@ -17,7 +17,7 @@ class NetworkLogListItem extends StatelessWidget {
   Icon? getIconByStatusCode(int statusCode) {
 
     if (statusCode >= 100 && statusCode < 200) {
-      return Icon(
+      return const Icon(
         Icons.info_outline,
         color: AppColors.orange,
         size: 35,

@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:vas_ods/core/theme/theme_notifier.dart' show ThemeNotifier;
 import 'package:vas_ods/feature/app/bloc_providers.dart' show buildListProviders;
 import 'package:vas_ods/feature/app/main_route_app.dart';
-import 'routing/app_router_provider.dart' show AppRouterProvider;
 
 class Application extends StatefulWidget {
   const Application({super.key});

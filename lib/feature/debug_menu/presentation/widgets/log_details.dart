@@ -8,7 +8,7 @@ import 'log_item_card.dart';
 
 class LogDetails extends StatelessWidget {
 
-  const LogDetails({
+  const LogDetails({super.key, 
     required this.logModel
   });
 

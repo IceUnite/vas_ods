@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:vas_ods/feature/debug_menu/presentation/widgets/request_log_details.dart';
 import 'package:vas_ods/feature/debug_menu/presentation/widgets/response_log_details.dart';
 
@@ -9,7 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/typography.dart';
 
 class NetworkLogDetails extends StatefulWidget {
-  const NetworkLogDetails({required this.networkLogModel});
+  const NetworkLogDetails({super.key, required this.networkLogModel});
 
   final NetworkLogModel networkLogModel;
 

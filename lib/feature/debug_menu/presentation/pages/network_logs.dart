@@ -10,6 +10,8 @@ import '../widgets/network_log_details.dart';
 import '../widgets/network_log_list_item.dart';
 
 class NetworkLogs extends StatefulWidget {
+  const NetworkLogs({super.key});
+
 
   @override
   State<NetworkLogs> createState() => _NetworkLogsState();
@@ -51,11 +53,11 @@ class _NetworkLogsState extends State<NetworkLogs> {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return SettingsFiltersContent();
+                        return const SettingsFiltersContent();
                       }
                   );
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.settings,
                   color: AppColors.white,
                 )
@@ -96,6 +98,8 @@ class _NetworkLogsState extends State<NetworkLogs> {
 }
 
 class SettingsFiltersContent extends StatefulWidget {
+  const SettingsFiltersContent({super.key});
+
   @override
   State<SettingsFiltersContent> createState() => _SettingsFiltersContentState();
 }

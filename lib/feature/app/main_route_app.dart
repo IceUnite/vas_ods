@@ -54,19 +54,19 @@ final goRouter = GoRouter(
           GoRoute(
             path: AppRoute.statisticsScreenPath,
             name: AppRoute.statisticsScreenPath,
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: StatisticsOrdersPage(),
             ),
           ),GoRoute(
             path: AppRoute.debugScreenPath,
             name: AppRoute.debugScreenPath,
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: DebugPage(),
             ),
           ),GoRoute(
             path: AppRoute.debugMenuPath,
             name: AppRoute.debugMenuPath,
-            pageBuilder: (context, state) => NoTransitionPage(
+            pageBuilder: (context, state) => const NoTransitionPage(
               child: DebugMenu(),
             ),
           ),

@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +16,10 @@ part 'order_state.dart';
 class OrderCubit extends Cubit<OrderCubitState> {
   OrderCubit()
       : super(OrderCubitState(
-            groupedApplicationList: [],
+            groupedApplicationList: const [],
             selectedDate: DateTime.now(),
             selectedDateFormatted: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-            groupedStats: []));
+            groupedStats: const []));
 
   List<List<OrderServiceItem?>?> groupByDocumentId(List<OrderServiceItem> items) {
     final Map<int, List<OrderServiceItem>> grouped = {};

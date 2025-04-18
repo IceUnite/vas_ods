@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import 'package:vas_ods/core/widgets/app_bar_widget.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../app/routing/route_path.dart';

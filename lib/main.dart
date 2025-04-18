@@ -46,7 +46,7 @@ class _ListenersState extends State<Listeners> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
-        listeners: [
+        listeners: const [
           BlocListener<AuthBloc, AuthState>(
             listener: _authorizationHandler,
           ),
