@@ -18,8 +18,9 @@ import 'package:vas_ods/feature/main_page/presentation/bloc/order_bloc.dart';
 import '../../feature/main_page/presentation/cubit/order_cubit.dart';
 
 class BreakfastAppBarWidget extends StatefulWidget {
-  const BreakfastAppBarWidget({Key? key, required this.selectTime}) : super(key: key);
+  const BreakfastAppBarWidget({Key? key, required this.selectTime, required this.isActiveInitState}) : super(key: key);
   final TimeOfDay? selectTime;
+  final bool isActiveInitState;
 
   @override
   _BreakfastAppBarWidgetState createState() => _BreakfastAppBarWidgetState();
@@ -27,22 +28,28 @@ class BreakfastAppBarWidget extends StatefulWidget {
 
 class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   late Timer _timer;
-  late Timer _timerTime;
   late String _formattedTime;
 
   @override
   void initState() {
     super.initState();
     _formattedTime = _formatDateTime(DateTime.now());
-    var state = context.read<OrderBloc>().state;
-    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
-    _timer = Timer.periodic(const Duration(seconds: 60), (Timer t) {
-      setState(() {
-        state = context.read<OrderBloc>().state;
-        context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
-        _formattedTime = _formatDateTime(DateTime.now());
+
+    if (widget.isActiveInitState) {
+      final orderBloc = context.read<OrderBloc>();
+      final selectedDate = orderBloc.state.selectedDateFormatted ?? '';
+
+      // начальный запрос
+      orderBloc.add(GetApplicationsByDateEvent(date: selectedDate));
+
+      _timer = Timer.periodic(const Duration(seconds: 60), (Timer t) {
+        final updatedDate = orderBloc.state.selectedDateFormatted ?? '';
+        orderBloc.add(GetApplicationsByDateEvent(date: updatedDate));
+        setState(() {
+          _formattedTime = _formatDateTime(DateTime.now());
+        });
       });
-    });
+    } else {}
   }
 
   String _formatDateTime(DateTime dateTime) {
@@ -57,9 +64,12 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   }
 
   @override
+  @override
   void dispose() {
-    _timer.cancel();
-    _timerTime.cancel();
+    if (widget.isActiveInitState) {
+      _timer.cancel();
+    }
+    _resetTapTimer?.cancel();
     super.dispose();
   }
 
@@ -130,71 +140,72 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
                   style: AppTypography.font32Regular.copyWith(color: AppColors.orange100),
                 ),
               ),
-              const VerticalDividerWidget(),
-              Container(
-                width: 200,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: AppColors.black100,
-                  border: Border.all(
-                    color: AppColors.orange, // Оранжевая рамка
-                    width: 1, // Толщина рамки
+              if (widget.isActiveInitState == true) ...[
+                const VerticalDividerWidget(),
+                Container(
+                  width: 200,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.black100,
+                    border: Border.all(
+                      color: AppColors.orange, // Оранжевая рамка
+                      width: 1, // Толщина рамки
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Spacer(),
+                        Row(
+                          children: [
+                            Text(
+                              'Документов на ${OrderCubit.formatDate(state.selectedDate.toString())}',
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              '${state.applicationCount}',
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            const Text(
+                              'Ожидают выполнения: ',
+                              style: TextStyle(
+                                color: AppColors.orange,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              '${state.applicationInWorkCount}',
+                              style: const TextStyle(
+                                color: AppColors.orange,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                      ],
+                    ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Spacer(),
-                      Row(
-                        children: [
-                          Text(
-                            'Документов на ${OrderCubit.formatDate(state.selectedDate.toString())}',
-                            style: const TextStyle(
-                              color: AppColors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            '${state.applicationCount}',
-                            style: const TextStyle(
-                              color: AppColors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Row(
-                        children: [
-                          const Text(
-                            'Ожидают выполнения: ',
-                            style: TextStyle(
-                              color: AppColors.orange,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            '${state.applicationInWorkCount}',
-                            style: const TextStyle(
-                              color: AppColors.orange,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                    ],
-                  ),
-                ),
-              ),
+              ],
               const VerticalDividerWidget(),
-
               IconButton(
                 onPressed: () {
                   ApeironSpaceDialog.showActionDialog(

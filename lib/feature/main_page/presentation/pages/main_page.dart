@@ -33,7 +33,7 @@ class _MainPageState extends State<MainPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BreakfastAppBarWidget(
-                selectTime: TimeOfDay.fromDateTime(DateTime.now()),
+                selectTime: TimeOfDay.fromDateTime(DateTime.now()), isActiveInitState: true,
               ),
               Expanded(
                 child: BlocBuilder<OrderCubit, OrderCubitState>(
@@ -58,13 +58,13 @@ class _MainPageState extends State<MainPage> {
                             return Row(
                               children: [
                                 CategoryColumn(
-                                  title: group.first.document.name ?? '',
+                                  title: group.first.document?.name ?? '',
                                   cards: group.map((item) {
                                     return UserCard(
                                       userId: item.idUser,
-                                      userName: '${item.user.name ?? ''} ${item.user.middleName ?? ''}',
+                                      userName: '${item.user?.name ?? ''} ${item.user?.middleName ?? ''}',
                                       orderDate: item.createdAt ?? '',
-                                      phoneNumber: item.user.phone,
+                                      phoneNumber: item.user?.phone,
                                       warningMessage: item.description,
                                       documentId: item.idDoc,
                                       status: item.status,
