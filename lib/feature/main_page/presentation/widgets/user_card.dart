@@ -83,7 +83,7 @@ class UserCard extends StatelessWidget {
                 ),
 
                 // Warning box
-                warningMessage != null
+                warningMessage != null && warningMessage != ''
                     ? Container(
                         margin: const EdgeInsets.all(8),
                         padding: const EdgeInsets.all(12),
@@ -97,7 +97,10 @@ class UserCard extends StatelessWidget {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                warningMessage ?? '',
+                                // при изменении на статусы completed и ready не меняется дескрипшн тоесть это сообщение от пользователя
+                                status == 'in work' || status == 'completed' || status == 'ready'
+                                    ? 'Сообщение от пользователя "${warningMessage ?? ''}"'
+                                    : 'Вы ответили "${warningMessage ?? ''}"',
                                 style: const TextStyle(fontWeight: FontWeight.w600),
                               ),
                             ),
@@ -245,6 +248,8 @@ class UserCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
+
+                        //TODO переделать описание
                         if (warningMessage != null && warningMessage!.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5.0),

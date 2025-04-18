@@ -18,6 +18,10 @@ class StatisticsOrdersPage extends StatelessWidget {
           BreakfastAppBarWidget(
             selectTime: TimeOfDay.fromDateTime(DateTime.now()),
           ),
+          Spacer(),
+          Center(child: Text('В разработке')),
+          Spacer(),
+
         ],
       ),
     );

@@ -55,17 +55,14 @@ class _InitScreenState extends State<InitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: Center(
-        child: SizedBox(
-          width: 150,
-          height: 150,
-          child: SvgPicture.asset(
-            ImageAssets.logo,
-            color: AppColors.orange200,
-          ),
-        ),
+    return const Scaffold(
+      backgroundColor: AppColors.appBackground,
+      body: SizedBox(
+        // width: 150,
+        // height: 140,
+        // child: SvgPicture.asset(
+        //   VectorAssets.logoWhite,
+        // ),
       ),
     );
   }

@@ -64,7 +64,6 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
   @override
   Widget build(BuildContext context) {
     final currentLocation = GoRouter.of(context).location;
-    final screenWidth = MediaQuery.of(context).size.width;
 
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
@@ -96,6 +95,17 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
               // ),
               IconButton(
                   onPressed: () {
+                    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
+                  },
+                  icon: SvgPicture.asset(
+                    VectorAssets.refresh,
+                    color: AppColors.white,
+                    width: 30,
+                    height: 30,
+                  )),
+              const VerticalDividerWidget(),
+              IconButton(
+                  onPressed: () {
                     context.goNamed(AppRoute.mainScreenPath);
                   },
                   icon: SvgPicture.asset(
@@ -119,7 +129,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
               const VerticalDividerWidget(),
               const SizedBox(width: 12),
               const DataSelectorWidget(),
-              const SizedBox(width: 12),
+              const VerticalDividerWidget(),
               InkWell(
                 onTap: () {
                   // handle time select
@@ -157,6 +167,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
       },
     );
   }
+
   int _logoTapCount = 0;
   Timer? _resetTapTimer;
 
@@ -174,5 +185,4 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
       _resetTapTimer?.cancel();
     }
   }
-
 }

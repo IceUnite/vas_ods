@@ -9,6 +9,7 @@ class VectorAssets {
   static const String exite = 'assets/images/ic_exite.svg';
   static const String calendarOutline = 'assets/images/ic_calendar_outline.svg';
   static const String homeOutline = 'assets/images/ic_home_outline.svg';
+  static const String refresh = 'assets/images/ic_refresh.svg';
 
   //USER CARD
   static const String calendar = 'assets/images/ic_calendar.svg';

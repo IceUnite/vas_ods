@@ -60,7 +60,7 @@ class _MainPageState extends State<MainPage> {
                                 userName: '${item.user.name ?? ''} ${item.user.middleName ?? ''}',
                                 orderDate: item.createdAt ?? '',
                                 phoneNumber: item.user.phone,
-                                warningMessage: null,
+                                warningMessage: item.description ,
                                 documentId: item.idDoc,
                                 status: item.status,
                                 id: item.id,
