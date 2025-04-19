@@ -49,15 +49,15 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
                 const SizedBox(width: 20),
                 _buildHeader('Дата'),
                 const VerticalDividerWidget(),
-                _buildHeader('Ожидают выполнения'), // in work
+                _buildHeader('Ожидают выполнения'),
                 const VerticalDividerWidget(),
-                _buildHeader('Выполнены'), // ready
+                _buildHeader('Выполнены'),
                 const VerticalDividerWidget(),
-                _buildHeader('Получены заказчиком'), // completed
+                _buildHeader('Получены заказчиком'),
                 const VerticalDividerWidget(),
-                _buildHeader('Отмечены ошибкой'), // error
+                _buildHeader('Отмечены ошибкой'),
                 const VerticalDividerWidget(),
-                _buildHeader('Отменены заказчиком'), // cancelled
+                _buildHeader('Отменены заказчиком'),
                 const SizedBox(width: 20),
               ],
             ),
@@ -80,16 +80,24 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
                   itemCount: stats.length,
                   itemBuilder: (context, index) {
                     final item = stats[index];
+                    final isLastRow = index == stats.length - 1;
+
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          left: const BorderSide(color: AppColors.white, width: 1),
+                          right: const BorderSide(color: AppColors.white, width: 1),
+                        ),
+                      ),
                       child: Row(
                         children: [
-                          _buildCell(item.date),
-                          _buildCell('${item.inWorkCount}'),
-                          _buildCell('${item.readyCount}'),
-                          _buildCell('${item.completedCount}'),
-                          _buildCell('${item.errorCount}'),
-                          _buildCell('${item.cancelledCount}'),
+                          _buildCell(item.date, drawTopBorder: true, drawBottomBorder: isLastRow),
+                          _buildCell('${item.inWorkCount}', drawTopBorder: true, drawBottomBorder: isLastRow),
+                          _buildCell('${item.readyCount}', drawTopBorder: true, drawBottomBorder: isLastRow),
+                          _buildCell('${item.completedCount}', drawTopBorder: true, drawBottomBorder: isLastRow),
+                          _buildCell('${item.errorCount}', drawTopBorder: true, drawBottomBorder: isLastRow),
+                          _buildCell('${item.cancelledCount}', drawTopBorder: true, drawBottomBorder: isLastRow, isLastColumn: true),
                         ],
                       ),
                     );
@@ -115,17 +123,27 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
     );
   }
 
-  Widget _buildCell(String text) {
+  Widget _buildCell(
+      String text, {
+        bool isLastColumn = false,
+        bool drawTopBorder = false,
+        bool drawBottomBorder = false,
+      }) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.white, width: 1),
+          border: Border(
+            top: drawTopBorder ? const BorderSide(color: AppColors.white, width: 1) : BorderSide.none,
+            bottom: drawBottomBorder ? const BorderSide(color: AppColors.white, width: 1) : BorderSide.none,
+            right: isLastColumn ? BorderSide.none : const BorderSide(color: AppColors.white, width: 1),
+          ),
         ),
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: AppTypography.font14Regular.copyWith(
+          style: AppTypography.font16Regular.copyWith(
+            fontWeight: FontWeight.w700,
             color: AppColors.white,
           ),
         ),

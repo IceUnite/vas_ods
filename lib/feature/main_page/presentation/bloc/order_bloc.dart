@@ -59,7 +59,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       rethrow;
     }
   }
-
   Future<void> _onGetAllApplicationsEvent(GetAllApplicationsEvent event, Emitter<OrderState> emit) async {
     final userId = sharedPrefsRawProvider.getInt(SharedKeyWords.userId);
     final token = sharedPrefsRawProvider.getString(SharedKeyWords.accessTokenKey);
@@ -81,23 +80,20 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           final createdAtString = item.createdAt;
           if (createdAtString == null || createdAtString.isEmpty) continue;
 
-          // Преобразуем строку в DateTime и форматируем как yyyy-MM-dd
           final createdAt = DateTime.tryParse(createdAtString);
           if (createdAt == null) continue;
 
-          final formattedDate = DateFormat('yyyy-MM-dd').format(createdAt);
+          final formattedDate = DateFormat('dd/MM/yyyy').format(createdAt);
           groupedByDate.putIfAbsent(formattedDate, () => []);
           groupedByDate[formattedDate]!.add(item);
         }
 
-        // Строим статистику по каждой дате
+        // Строим статистику по каждой дате — без фильтрации по in work
         final List<GroupedOrderStats> groupedStats = [];
 
         for (var entry in groupedByDate.entries) {
           final date = entry.key;
           final orders = entry.value;
-
-          if (!orders.any((item) => item.status == 'in work')) continue;
 
           groupedStats.add(GroupedOrderStats(
             date: date,
@@ -117,7 +113,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         // Сохраняем сгруппированную статистику
         orderCubit.groupedStats(groupedStats);
 
-        // Общее количество "in work"
         final inWorkCount = items.where((item) => item.status == 'in work').length;
 
         emit(state.copyWith(
@@ -130,6 +125,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       rethrow;
     }
   }
+
+
 
 
 
