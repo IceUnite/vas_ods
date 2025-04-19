@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:vas_ods/core/theme/app_colors.dart';
 import 'package:vas_ods/core/theme/typography.dart';
 import 'package:vas_ods/core/widgets/app_bar_widget.dart';
@@ -35,12 +36,12 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
             isActiveInitState: false,
           ),
           Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
               color: AppColors.black100,
               border: Border.all(
-                color: AppColors.white,
+                color: AppColors.gray.shade80,
                 width: 1,
               ),
             ),
@@ -48,15 +49,15 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
               children: [
                 const SizedBox(width: 20),
                 _buildHeader('Дата'),
-                const VerticalDividerWidget(),
+                _VerticalDividerWidget(),
                 _buildHeader('Ожидают выполнения'),
-                const VerticalDividerWidget(),
+                _VerticalDividerWidget(),
                 _buildHeader('Выполнены'),
-                const VerticalDividerWidget(),
+                _VerticalDividerWidget(),
                 _buildHeader('Получены заказчиком'),
-                const VerticalDividerWidget(),
+                _VerticalDividerWidget(),
                 _buildHeader('Отмечены ошибкой'),
-                const VerticalDividerWidget(),
+                _VerticalDividerWidget(),
                 _buildHeader('Отменены заказчиком'),
                 const SizedBox(width: 20),
               ],
@@ -82,12 +83,27 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
                     final item = stats[index];
                     final isLastRow = index == stats.length - 1;
 
+                    final itemDate = DateFormat('dd/MM/yyyy').parse(item.date);
+                    final now = DateTime.now();
+
+                    Color rowColor;
+                    if (item.inWorkCount > 0) {
+                      if (itemDate.isBefore(DateTime(now.year, now.month, now.day))) {
+                        rowColor = Colors.red.withOpacity(0.2); // просрочено
+                      } else {
+                        rowColor = Colors.yellow.withOpacity(0.2); // в процессе
+                      }
+                    } else {
+                      rowColor = Colors.green.withOpacity(0.2); // всё выполнено
+                    }
+
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
+                        color: rowColor,
                         border: Border(
-                          left: const BorderSide(color: AppColors.white, width: 1),
-                          right: const BorderSide(color: AppColors.white, width: 1),
+                          left: BorderSide(color: AppColors.gray.shade80, width: 1),
+                          right: BorderSide(color: AppColors.gray.shade80, width: 1),
                         ),
                       ),
                       child: Row(
@@ -97,7 +113,8 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
                           _buildCell('${item.readyCount}', drawTopBorder: true, drawBottomBorder: isLastRow),
                           _buildCell('${item.completedCount}', drawTopBorder: true, drawBottomBorder: isLastRow),
                           _buildCell('${item.errorCount}', drawTopBorder: true, drawBottomBorder: isLastRow),
-                          _buildCell('${item.cancelledCount}', drawTopBorder: true, drawBottomBorder: isLastRow, isLastColumn: true),
+                          _buildCell('${item.cancelledCount}',
+                              drawTopBorder: true, drawBottomBorder: isLastRow, isLastColumn: true),
                         ],
                       ),
                     );
@@ -123,19 +140,28 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
     );
   }
 
+  Widget _VerticalDividerWidget() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 31),
+      width: 1,
+      height: 23,
+      color: AppColors.gray.shade80,
+    );
+  }
+
   Widget _buildCell(
-      String text, {
-        bool isLastColumn = false,
-        bool drawTopBorder = false,
-        bool drawBottomBorder = false,
-      }) {
+    String text, {
+    bool isLastColumn = false,
+    bool drawTopBorder = false,
+    bool drawBottomBorder = false,
+  }) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
           border: Border(
-            top: drawTopBorder ? const BorderSide(color: AppColors.white, width: 1) : BorderSide.none,
-            bottom: drawBottomBorder ? const BorderSide(color: AppColors.white, width: 1) : BorderSide.none,
-            right: isLastColumn ? BorderSide.none : const BorderSide(color: AppColors.white, width: 1),
+            top: drawTopBorder ? BorderSide(color: AppColors.gray.shade80, width: 1) : BorderSide.none,
+            bottom: drawBottomBorder ? BorderSide(color: AppColors.gray.shade80, width: 1) : BorderSide.none,
+            right: isLastColumn ? BorderSide.none : BorderSide(color: AppColors.gray.shade80, width: 1),
           ),
         ),
         padding: const EdgeInsets.symmetric(vertical: 12),

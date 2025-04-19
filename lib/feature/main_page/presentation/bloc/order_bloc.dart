@@ -59,7 +59,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       rethrow;
     }
   }
-  Future<void> _onGetAllApplicationsEvent(GetAllApplicationsEvent event, Emitter<OrderState> emit) async {
+  Future<void> _onGetAllApplicationsEvent(
+      GetAllApplicationsEvent event,
+      Emitter<OrderState> emit,
+      ) async {
     final userId = sharedPrefsRawProvider.getInt(SharedKeyWords.userId);
     final token = sharedPrefsRawProvider.getString(SharedKeyWords.accessTokenKey);
 
@@ -73,7 +76,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       if (data != null && data.data != null) {
         final List<OrderServiceItem> items = data.data!;
 
-        // Группировка по дате
+        // Группировка по дате создания
         final Map<String, List<OrderServiceItem>> groupedByDate = {};
 
         for (final item in items) {
@@ -88,43 +91,47 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           groupedByDate[formattedDate]!.add(item);
         }
 
-        // Строим статистику по каждой дате — без фильтрации по in work
-        final List<GroupedOrderStats> groupedStats = [];
+        // Сортировка по дате от новой к старой
+        final sortedEntries = groupedByDate.entries.toList()
+          ..sort((a, b) {
+            final dateA = DateFormat('dd/MM/yyyy').parse(a.key);
+            final dateB = DateFormat('dd/MM/yyyy').parse(b.key);
+            return dateB.compareTo(dateA);
+          });
 
-        for (var entry in groupedByDate.entries) {
+        // Формирование статистики
+        final List<GroupedOrderStats> groupedStats = sortedEntries.map((entry) {
           final date = entry.key;
           final orders = entry.value;
 
-          groupedStats.add(GroupedOrderStats(
+          return GroupedOrderStats(
             date: date,
             readyCount: orders.where((e) => e.status == 'ready').length,
             inWorkCount: orders.where((e) => e.status == 'in work').length,
             cancelledCount: orders.where((e) => e.status == 'cancelled').length,
             errorCount: orders.where((e) => e.status == 'error').length,
             completedCount: orders.where((e) => e.status == 'completed').length,
-          ));
-        }
+          );
+        }).toList();
 
-        // Логгируем подробности
+        // Выводим в консоль (если нужно)
         for (final group in groupedStats) {
           print(group.toString());
         }
 
-        // Сохраняем сгруппированную статистику
+        // Передача статистики в кубит
         orderCubit.groupedStats(groupedStats);
 
-        final inWorkCount = items.where((item) => item.status == 'in work').length;
-
+        // Обновление состояния
         emit(state.copyWith(
           getApplicationsResponse: data,
-          // applicationCount: items.length,
-          // applicationInWorkCount: inWorkCount,
         ));
       }
     } catch (e) {
       rethrow;
     }
   }
+
 
 
 
