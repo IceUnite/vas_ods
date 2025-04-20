@@ -59,8 +59,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       rethrow;
     }
   }
-
-  Future<void> _onGetAllApplicationsEvent(GetAllApplicationsEvent event, Emitter<OrderState> emit) async {
+  Future<void> _onGetAllApplicationsEvent(
+      GetAllApplicationsEvent event,
+      Emitter<OrderState> emit,
+      ) async {
     final userId = sharedPrefsRawProvider.getInt(SharedKeyWords.userId);
     final token = sharedPrefsRawProvider.getString(SharedKeyWords.accessTokenKey);
 
@@ -74,62 +76,64 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       if (data != null && data.data != null) {
         final List<OrderServiceItem> items = data.data!;
 
-        // Группировка по дате
+        // Группировка по дате создания
         final Map<String, List<OrderServiceItem>> groupedByDate = {};
 
         for (final item in items) {
           final createdAtString = item.createdAt;
           if (createdAtString == null || createdAtString.isEmpty) continue;
 
-          // Преобразуем строку в DateTime и форматируем как yyyy-MM-dd
           final createdAt = DateTime.tryParse(createdAtString);
           if (createdAt == null) continue;
 
-          final formattedDate = DateFormat('yyyy-MM-dd').format(createdAt);
+          final formattedDate = DateFormat('dd/MM/yyyy').format(createdAt);
           groupedByDate.putIfAbsent(formattedDate, () => []);
           groupedByDate[formattedDate]!.add(item);
         }
 
-        // Строим статистику по каждой дате
-        final List<GroupedOrderStats> groupedStats = [];
+        // Сортировка по дате от новой к старой
+        final sortedEntries = groupedByDate.entries.toList()
+          ..sort((a, b) {
+            final dateA = DateFormat('dd/MM/yyyy').parse(a.key);
+            final dateB = DateFormat('dd/MM/yyyy').parse(b.key);
+            return dateB.compareTo(dateA);
+          });
 
-        for (var entry in groupedByDate.entries) {
+        // Формирование статистики
+        final List<GroupedOrderStats> groupedStats = sortedEntries.map((entry) {
           final date = entry.key;
           final orders = entry.value;
 
-          if (!orders.any((item) => item.status == 'in work')) continue;
-
-          groupedStats.add(GroupedOrderStats(
+          return GroupedOrderStats(
             date: date,
             readyCount: orders.where((e) => e.status == 'ready').length,
             inWorkCount: orders.where((e) => e.status == 'in work').length,
             cancelledCount: orders.where((e) => e.status == 'cancelled').length,
             errorCount: orders.where((e) => e.status == 'error').length,
             completedCount: orders.where((e) => e.status == 'completed').length,
-          ));
-        }
+          );
+        }).toList();
 
-        // Логгируем подробности
+        // Выводим в консоль (если нужно)
         for (final group in groupedStats) {
           print(group.toString());
         }
 
-        // Сохраняем сгруппированную статистику
+        // Передача статистики в кубит
         orderCubit.groupedStats(groupedStats);
 
-        // Общее количество "in work"
-        final inWorkCount = items.where((item) => item.status == 'in work').length;
-
+        // Обновление состояния
         emit(state.copyWith(
           getApplicationsResponse: data,
-          // applicationCount: items.length,
-          // applicationInWorkCount: inWorkCount,
         ));
       }
     } catch (e) {
       rethrow;
     }
   }
+
+
+
 
 
 
