@@ -24,5 +24,13 @@
 - 💾 Локальное хранение — *shared_preferences* для хранения настроек  
 - 🧙 Кодогенерация — *build_runner*, *freezed*, *json_serializable*, *injectable_generator*  
 - 🎬 Анимации — *lottie*, *flutter_staggered_animations*, *modal_bottom_sheet*, *bot_toast*  
-- 🖼 SVG и иконки — *flutter_svg*, *flutter_launcher_icons*  
+- 🖼 SVG и иконки — *flutter_svg*, *flutter_launcher_icons*
+
+- 
+## 🚀 Запуск проекта
+
+- 🔥 Клонируй репозиторий и переходи в папку проекта
+- 📦 Установи все зависимости с помощью flutter pub get
+- 🛠 Выполни кодогенерацию командой flutter pub run build_runner build --delete-conflicting-outputs
+- ▶️ Запусти приложение с помощью flutter run
 
