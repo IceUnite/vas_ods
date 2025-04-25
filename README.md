@@ -26,7 +26,6 @@
 - 🎬 Анимации — *lottie*, *flutter_staggered_animations*, *modal_bottom_sheet*, *bot_toast*  
 - 🖼 SVG и иконки — *flutter_svg*, *flutter_launcher_icons*
 
-- 
 ## 🚀 Запуск проекта
 
 - 🔥 Клонируй репозиторий и переходи в папку проекта
