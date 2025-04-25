@@ -77,6 +77,7 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
                 }
 
                 return ListView.builder(
+                  physics: const ClampingScrollPhysics(),
                   itemCount: stats.length,
                   itemBuilder: (context, index) {
                     final item = stats[index];

@@ -45,6 +45,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
       _timer = Timer.periodic(const Duration(seconds: 60), (Timer t) {
         final updatedDate = orderBloc.state.selectedDateFormatted ?? '';
         orderBloc.add(GetApplicationsByDateEvent(date: updatedDate));
+        context.read<OrderBloc>().add(GetAllApplicationsEvent());
         setState(() {
           _formattedTime = _formatDateTime(DateTime.now());
         });
@@ -96,7 +97,13 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
               const Spacer(),
               IconButton(
                   onPressed: () {
-                    context.read<OrderBloc>().add(GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
+                    if(currentLocation == '/${AppRoute.mainScreenPath}') {
+                      context.read<OrderBloc>().add(
+                          GetApplicationsByDateEvent(date: state.selectedDateFormatted ?? ''));
+                    }
+                    if (currentLocation == '/${AppRoute.statisticsScreenPath}') {
+                      context.read<OrderBloc>().add(GetAllApplicationsEvent());
+                    }
                   },
                   icon: SvgPicture.asset(
                     VectorAssets.refresh,

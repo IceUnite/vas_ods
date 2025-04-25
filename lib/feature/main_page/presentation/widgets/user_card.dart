@@ -53,6 +53,7 @@ class UserCard extends StatelessWidget {
           previous.applicationStatus != current.applicationStatus &&
           current.applicationStatus == ApplicationStatus.success,
       listener: (context, state) {
+        context.read<OrderBloc>().add(GetAllApplicationsEvent());
         context.read<OrderBloc>().add(
               GetApplicationsByDateEvent(
                 date: state.selectedDateFormatted ?? '',
