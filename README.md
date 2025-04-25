@@ -4,7 +4,7 @@
 
 ## 📱 Demo
 
-<p align="center"> <img src="assets/demo/demo.gif" width="250" /> </p>
+<p align="center"> <img src="assets/demo/demo.gif" heigh="550" /> </p>
 
 ## ✨ Основной функционал
 
