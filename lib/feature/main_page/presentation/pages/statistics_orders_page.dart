@@ -37,7 +37,7 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
           Container(
             margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
               color: AppColors.black100,
               border: Border.all(
                 color: AppColors.gray.shade80,
@@ -106,7 +106,7 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
                       decoration: BoxDecoration(
                         color: rowColor,
                         borderRadius: isLastRow
-                            ? BorderRadius.vertical(bottom: Radius.circular(10)) // закругление для всей строки
+                            ? const BorderRadius.vertical(bottom: Radius.circular(10)) // закругление для всей строки
                             : BorderRadius.zero,
                         border: Border(
                           left: BorderSide(color: AppColors.gray.shade80, width: 1),
@@ -182,8 +182,8 @@ class _StatisticsOrdersPageState extends State<StatisticsOrdersPage> {
                 : BorderSide(color: AppColors.gray.shade80, width: 1),
           ),
           borderRadius: BorderRadius.only(
-            bottomLeft: isFirstColumn && drawBottomBorder && isLastRow ? Radius.circular(10) : Radius.zero, // Закругление для первой ячейки в последней строке
-            bottomRight: isLastColumn && drawBottomBorder && isLastRow ? Radius.circular(10) : Radius.zero, // Закругление для последней ячейки в последней строке
+            bottomLeft: isFirstColumn && drawBottomBorder && isLastRow ? const Radius.circular(10) : Radius.zero, // Закругление для первой ячейки в последней строке
+            bottomRight: isLastColumn && drawBottomBorder && isLastRow ? const Radius.circular(10) : Radius.zero, // Закругление для последней ячейки в последней строке
           ),
         ),
         padding: const EdgeInsets.symmetric(vertical: 12),

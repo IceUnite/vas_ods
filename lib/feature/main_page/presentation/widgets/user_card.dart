@@ -131,7 +131,7 @@ class UserCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 14.0),
                   child: infoTile(VectorAssets.phone, '  $phoneNumber'),
-                ) : SizedBox(),
+                ) : const SizedBox(),
 
                 // Document ID
                 Padding(

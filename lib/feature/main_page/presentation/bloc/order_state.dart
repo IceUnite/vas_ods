@@ -2,7 +2,7 @@ part of 'order_bloc.dart';
 
 @immutable
 class OrderState extends Equatable {
-  OrderState({
+  const OrderState({
     this.getApplicationsResponse,
     this.selectedDate,
     this.selectedDateFormatted,
@@ -18,6 +18,7 @@ class OrderState extends Equatable {
   final int? applicationCount;
   final int? applicationInWorkCount;
 
+  @override
   List<Object?> get props => <Object?>[
         getApplicationsResponse,
         selectedDate,

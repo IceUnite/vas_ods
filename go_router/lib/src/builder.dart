@@ -553,7 +553,7 @@ class _RouteBuilderError extends Error {
 class _RouteBuilderException implements Exception {
   /// Constructs a [_RouteBuilderException].
   //ignore: unused_element
-  _RouteBuilderException(this.message, {this.exception});
+  _RouteBuilderException(this.message);
 
   /// The error message.
   final String message;

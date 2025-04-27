@@ -129,34 +129,54 @@ class MadInspectorNetworkModule {
     if (_searchQuery.isNotEmpty && elementToAdd.requestUrl?.toLowerCase().contains(_searchQuery.toLowerCase()) != true) return;
 
     if (!_statusFilterMap.contains(StatusFilterEnum.informational) &&
-        (elementToAdd.statusCode ?? 0) >= 100 && (elementToAdd.statusCode ?? 0) <= 199) return;
+        (elementToAdd.statusCode ?? 0) >= 100 && (elementToAdd.statusCode ?? 0) <= 199) {
+      return;
+    }
 
     if (!_statusFilterMap.contains(StatusFilterEnum.successful) &&
-        (elementToAdd.statusCode ?? 0) >= 200 && (elementToAdd.statusCode ?? 0) <= 299) return;
+        (elementToAdd.statusCode ?? 0) >= 200 && (elementToAdd.statusCode ?? 0) <= 299) {
+      return;
+    }
 
     if (!_statusFilterMap.contains(StatusFilterEnum.redirection) &&
-        (elementToAdd.statusCode ?? 0) >= 300 && (elementToAdd.statusCode ?? 0) <= 399) return;
+        (elementToAdd.statusCode ?? 0) >= 300 && (elementToAdd.statusCode ?? 0) <= 399) {
+      return;
+    }
 
     if (!_statusFilterMap.contains(StatusFilterEnum.clientError) &&
-        (elementToAdd.statusCode ?? 0) >= 400 && (elementToAdd.statusCode ?? 0) <= 499) return;
+        (elementToAdd.statusCode ?? 0) >= 400 && (elementToAdd.statusCode ?? 0) <= 499) {
+      return;
+    }
 
     if (!_statusFilterMap.contains(StatusFilterEnum.serverError) &&
-        (elementToAdd.statusCode ?? 0) >= 500 && (elementToAdd.statusCode ?? 0) <= 599) return;
+        (elementToAdd.statusCode ?? 0) >= 500 && (elementToAdd.statusCode ?? 0) <= 599) {
+      return;
+    }
 
     if (!_methodFilterMap.contains(MethodEnum.get) &&
-        elementToAdd.httpMethod?.toLowerCase() == 'get') return;
+        elementToAdd.httpMethod?.toLowerCase() == 'get') {
+      return;
+    }
 
     if (!_methodFilterMap.contains(MethodEnum.post) &&
-        elementToAdd.httpMethod?.toLowerCase() == 'post') return;
+        elementToAdd.httpMethod?.toLowerCase() == 'post') {
+      return;
+    }
 
     if (!_methodFilterMap.contains(MethodEnum.put) &&
-        elementToAdd.httpMethod?.toLowerCase() == 'put') return;
+        elementToAdd.httpMethod?.toLowerCase() == 'put') {
+      return;
+    }
 
     if (!_methodFilterMap.contains(MethodEnum.put) &&
-        elementToAdd.httpMethod?.toLowerCase() == 'patch') return;
+        elementToAdd.httpMethod?.toLowerCase() == 'patch') {
+      return;
+    }
 
     if (!_methodFilterMap.contains(MethodEnum.delete) &&
-        elementToAdd.httpMethod?.toLowerCase() == 'delete') return;
+        elementToAdd.httpMethod?.toLowerCase() == 'delete') {
+      return;
+    }
 
     _filteredNetworkResponses.insert(0, elementToAdd);
   }
