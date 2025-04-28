@@ -42,7 +42,7 @@ class _BreakfastAppBarWidgetState extends State<BreakfastAppBarWidget> {
       // начальный запрос
       orderBloc.add(GetApplicationsByDateEvent(date: selectedDate));
 
-      _timer = Timer.periodic(const Duration(seconds: 60), (Timer t) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
         final updatedDate = orderBloc.state.selectedDateFormatted ?? '';
         orderBloc.add(GetApplicationsByDateEvent(date: updatedDate));
         context.read<OrderBloc>().add(GetAllApplicationsEvent());
