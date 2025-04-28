@@ -367,7 +367,7 @@ class RouteBuilder {
       BuildContext context, GoRouterState state, RouteMatch match,
       {Widget? childWidget}) {
     final RouteBase route = match.route;
-
+    // Exeption e = Error() ;
     if (route is GoRoute) {
       final GoRouterWidgetBuilder? builder = route.builder;
 
@@ -379,7 +379,7 @@ class RouteBuilder {
     } else if (route is ShellRouteBase) {
       if (childWidget == null) {
         throw _RouteBuilderException(
-            'Attempt to build ShellRoute without a child widget');
+            'Attempt to build ShellRoute without a child widget', null);
       }
 
       if (route is StatefulShellRoute) {
@@ -397,7 +397,7 @@ class RouteBuilder {
       }
     }
 
-    throw _RouteBuilderException('Unsupported route type $route');
+    throw _RouteBuilderException('Unsupported route type $route', null);
   }
 
   _PageBuilderForAppType? _pageBuilderForAppType;
@@ -553,7 +553,7 @@ class _RouteBuilderError extends Error {
 class _RouteBuilderException implements Exception {
   /// Constructs a [_RouteBuilderException].
   //ignore: unused_element
-  _RouteBuilderException(this.message);
+  _RouteBuilderException(this.message, this.exception);
 
   /// The error message.
   final String message;
